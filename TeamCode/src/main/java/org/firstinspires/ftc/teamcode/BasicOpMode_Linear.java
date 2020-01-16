@@ -38,12 +38,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-//bbla
+/*
+    Codul pentru controlat robotul in TeleOp
+ */
 @TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
 //@Disabled
 public class BasicOpMode_Linear extends LinearOpMode {
 
-    // Declare OpMode members.
+    // Declaram variabilele
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor stanga_fata = null;
     private DcMotor dreapta_fata = null;
@@ -59,7 +61,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-
+        //sincronizam variabilele cu ce avem in configuratie
         stanga_fata  = hardwareMap.get(DcMotor.class, "stanga_f");
         dreapta_fata = hardwareMap.get(DcMotor.class, "dreapta_f");
         stanga_spate = hardwareMap.get(DcMotor.class, "stanga_s");
@@ -72,11 +74,11 @@ public class BasicOpMode_Linear extends LinearOpMode {
         servo_gimbal_2=hardwareMap.get(Servo.class,"Servo2");
 
 
-
-        stanga_fata.setDirection(DcMotor.Direction.REVERSE);
-        stanga_spate.setDirection(DcMotor.Direction.REVERSE);
-        dreapta_fata.setDirection(DcMotor.Direction.FORWARD);
-        dreapta_spate.setDirection(DcMotor.Direction.FORWARD);
+        //setarile pentru motoare
+        stanga_fata.setDirection(DcMotor.Direction.FORWARD);
+        stanga_spate.setDirection(DcMotor.Direction.FORWARD);
+        dreapta_fata.setDirection(DcMotor.Direction.REVERSE);
+        dreapta_spate.setDirection(DcMotor.Direction.REVERSE);
 
         motor_brat.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -88,27 +90,20 @@ public class BasicOpMode_Linear extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            double leftPower;
-            double rightPower;
-
-            leftPower=1;
-            rightPower=1;
-
+            //codul pentru mechanum
             stanga_fata.setPower(gamepad1.left_stick_y+gamepad1.right_stick_x+gamepad1.left_stick_x);
             stanga_spate.setPower(gamepad1.left_stick_y+gamepad1.right_stick_x-gamepad1.left_stick_x);
             dreapta_fata.setPower(gamepad1.left_stick_y-gamepad1.right_stick_x+gamepad1.left_stick_x);
             dreapta_spate.setPower(gamepad1.left_stick_y-gamepad1.right_stick_x-gamepad1.left_stick_x);
 
-            servo_gimbal_1.setPosition(servo_gimbal_1.getPosition()+gamepad2.left_stick_x);
-            servo_gimbal_2.setPosition(servo_gimbal_2.getPosition()+gamepad2.left_stick_y);
-
-                       motor_brat.setPower(gamepad2.left_stick_y*0.2);
+            //codul pentru brat
+            motor_brat.setPower(gamepad2.left_stick_y*0.2);
             motor_cremaliera.setPower(gamepad2.left_trigger);
             motor_cremaliera.setPower(-gamepad2.right_trigger);
 
 
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+
             telemetry.update();
         }
     }
