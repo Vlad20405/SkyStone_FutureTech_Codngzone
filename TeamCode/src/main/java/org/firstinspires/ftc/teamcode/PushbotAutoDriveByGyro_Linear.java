@@ -80,7 +80,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
  */
 //mama-i sorata
 @Autonomous(name="Pushbot: Auto Drive By Gyro", group="Pushbot")
-@Disabled
+//@Disabled
 public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
 
 
@@ -127,6 +127,15 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
 
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         // Ensure the robot it stationary, then reset the encoders and calibrate the gyro.
+        stanga_fata  = hardwareMap.get(DcMotor.class, "stanga_f");
+        dreapta_fata = hardwareMap.get(DcMotor.class, "dreapta_f");
+        stanga_spate = hardwareMap.get(DcMotor.class, "stanga_s");
+        dreapta_spate = hardwareMap.get(DcMotor.class, "dreapta_s");
+
+        motor_brat=hardwareMap.get(DcMotor.class,"motor_brat");
+        motor_cremaliera=hardwareMap.get(DcMotor.class,"motor_cremaliera");
+
+
         stanga_fata.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         dreapta_fata.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         stanga_spate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
