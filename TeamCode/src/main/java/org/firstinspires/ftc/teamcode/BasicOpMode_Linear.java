@@ -105,16 +105,12 @@ public class BasicOpMode_Linear extends LinearOpMode {
             motor_brat.setPower(gamepad2.left_stick_y*0.2);
             motor_cremaliera.setPower(gamepad2.left_trigger);
             motor_cremaliera.setPower(-gamepad2.right_trigger);
+            pozitie_servo1=Range.clip(pozitie_servo1+gamepad2.right_stick_x,0,1);
             servo_gimbal_1.setPosition(pozitie_servo1);
-            servo_gimbal_2.setPosition(pozitie_servo2);
+            servo_gimbal_2.setPosition(0.5);
 
-            while(gamepad2.right_stick_x!=0){
-                pozitie_servo1=Range.clip(servo_gimbal_1.getPosition()+gamepad2.left_stick_x*0.5,-1,1);
-            }
-            while(gamepad2.right_stick_y!=0){
-                pozitie_servo2=Range.clip(servo_gimbal_2.getPosition()+gamepad2.left_stick_y*0.5,-1,1);
-            }
 
+            telemetry.addData("Valor",gamepad2.right_stick_x);
             telemetry.addData("Status", "Run Time: " + runtime.toString());
 
             telemetry.update();
