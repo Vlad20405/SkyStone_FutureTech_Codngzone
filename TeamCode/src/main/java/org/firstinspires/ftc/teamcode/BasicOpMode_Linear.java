@@ -42,7 +42,7 @@ import com.qualcomm.robotcore.util.Range;
     Codul pentru controlat robotul in TeleOp
  */
 @TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
-//@Disabled
+//@Disable
 public class BasicOpMode_Linear extends LinearOpMode {
 
     // Declaram variabilele
