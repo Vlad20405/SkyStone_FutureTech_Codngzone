@@ -109,7 +109,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
             servo_gimbal_1.setPosition(pozitie_servo1);
             pozitie_servo2=Range.clip(gamepad2.right_stick_y*0.2+pozitie_servo2,0,1);
 
-            telemetry.addData("Valor",gamepad2.right_stick_x);
+            telemetry.addData("Valoare",gamepad2.right_stick_x);
             telemetry.addData("Status", "Run Time: " + runtime.toString());
 
             telemetry.update();
