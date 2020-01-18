@@ -54,8 +54,9 @@ public class BasicOpMode_Linear extends LinearOpMode {
     private DcMotor motor_brat= null;
     private DcMotor motor_cremaliera = null;
 
+    private Servo servo_cleste=null;
     private Servo servo_gimbal_1=null;
-    private Servo servo_gimbal_2=null;
+    private Servo servo_gimbal_2
 
     @Override
     public void runOpMode() {
