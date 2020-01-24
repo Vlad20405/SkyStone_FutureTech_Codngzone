@@ -96,6 +96,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
 
         servo_gimbal_2.setPosition(0);
 
+
         while (opModeIsActive()) {
 
             //codul pentru mechanum
@@ -106,7 +107,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
 
 
             //codul pentru brat
-            motor_brat.setPower(gamepad2.left_stick_y*0.2);
+            motor_brat.setPower(gamepad2.left_stick_y*0.5);
             motor_cremaliera.setPower(gamepad2.left_trigger);
             motor_cremaliera.setPower(-gamepad2.right_trigger);
 
