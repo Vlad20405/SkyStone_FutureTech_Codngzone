@@ -121,7 +121,12 @@ public class BasicOpMode_Linear extends LinearOpMode {
             if(gamepad2.y){
                 pozitie_servo1=pozitie_servo1-0.01;
             }
-
+            if(gamepad2.left_bumper) {
+                servo_cleste.setPosition(1);
+            }
+            if(gamepad2.right_bumper) {
+                servo_cleste.setPosition(0);
+            }
             pozitie_servo1=Range.clip(pozitie_servo1,0,1);
             pozitie_servo2=Range.clip(pozitie_servo2,0,1);
 
