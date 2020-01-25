@@ -102,6 +102,8 @@ public class adsfasdfasdfas extends LinearOpMode {
         dreapta_f = hardwareMap.get(DcMotor.class,"dreapta_f");
         dreapta_s = hardwareMap.get(DcMotor.class,"dreapta_s");
 
+
+
         stanga_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         stanga_s.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
