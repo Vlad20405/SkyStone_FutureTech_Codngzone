@@ -143,24 +143,34 @@ public class adsfasdfasdfas extends LinearOpMode {
                              double timeoutS) {
         int newLeftTarget_f;
         int newLeftTarget_s;
+        int newRightTarget_f;
+        int newRightTarget_s;
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
             newLeftTarget_f = stanga_f.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newLeftTarget_s = stanga_s.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newLeftTarget_s = stanga_s.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newRightTarget_f= dreapta_f.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
+            newRightTarget_s= dreapta_s.getCurrentPosition() + (int) (rightInches *COUNTS_PER_INCH);
             stanga_f.setTargetPosition(newLeftTarget_f);
             stanga_s.setTargetPosition(newLeftTarget_s);
+            dreapta_f.setTargetPosition(newRightTarget_f);
+            dreapta_s.setTargetPosition(newRightTarget_s);
 
             // Turn On RUN_TO_POSITION
             stanga_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             stanga_s.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            dreapta_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            dreapta_s.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
             stanga_f.setPower(Math.abs(speed));
             stanga_s.setPower(Math.abs(speed));
+            dreapta_f.setPower(Math.abs(speed));
+            dreapta_s.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -170,13 +180,13 @@ public class adsfasdfasdfas extends LinearOpMode {
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
                    (runtime.seconds() < timeoutS) &&
-                   (stanga_f.isBusy() && stanga_s.isBusy())) {
+                   (stanga_f.isBusy() && stanga_s.isBusy() &&dreapta_f.isBusy() && dreapta_s.isBusy())) {
 
                 // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget_f,  newLeftTarget_s);
-                telemetry.addData("Path2",  "Running at %7d :%7d",
+                telemetry.addData("Path1",  "Running to %7d :%7d : %7d : %7d" , newLeftTarget_f,  newLeftTarget_s, newRightTarget_s, newRightTarget_f);
+                telemetry.addData("Path2",  "Running at %7d :%7d : %7d : %7d",
                                             stanga_f.getCurrentPosition(),
-                                            stanga_s.getCurrentPosition());
+                                            stanga_s.getCurrentPosition(), dreapta_s.getCurrentPosition(), dreapta_f.getCurrentPosition());
                 telemetry.update();
             }
 
