@@ -79,6 +79,8 @@ public class BasicOpMode_Linear extends LinearOpMode {
         servo_gimbal_1=hardwareMap.get(Servo.class,"servo_gimba1");
         servo_gimbal_2=hardwareMap.get(Servo.class,"servo_gimba2");
 
+        servo_cutie=hardwareMap.get(Servo.class,"servo_cutie");
+
 
         //setarile pentru motoare
         stanga_fata.setDirection(DcMotor.Direction.FORWARD);
