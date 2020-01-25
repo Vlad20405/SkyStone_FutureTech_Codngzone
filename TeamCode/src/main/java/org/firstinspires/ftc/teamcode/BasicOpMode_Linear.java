@@ -133,6 +133,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
                 servo_cutie.setPosition(1);
             }
             if(gamepad2.dpad_up){
+
                 servo_cutie.setPosition(0);
             }
             pozitie_servo1=Range.clip(pozitie_servo1,0,1);
