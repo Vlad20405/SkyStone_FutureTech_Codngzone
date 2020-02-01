@@ -106,7 +106,10 @@ public class BasicOpMode_Linear extends LinearOpMode {
             stanga_spate.setPower(gamepad1.left_stick_y+gamepad1.right_stick_x-gamepad1.left_stick_x);
             dreapta_fata.setPower(gamepad1.left_stick_y-gamepad1.right_stick_x+gamepad1.left_stick_x);
             dreapta_spate.setPower(gamepad1.left_stick_y-gamepad1.right_stick_x-gamepad1.left_stick_x);
-
+            stanga_fata.setPower(0.1);
+            stanga_spate.setPower(0.1);
+            dreapta_fata.setPower(0.1);
+            dreapta_spate.setPower(0.1);
 
             //codul pentru brat
             motor_brat.setPower(gamepad2.left_stick_y*0.5);
@@ -134,7 +137,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
             if(gamepad2.dpad_down){
                 servo_cutie.setPosition(1);
             }
-            if(gamepad2.dpad_up){
+            if(gamepad2.dpad_up) {
 
                 servo_cutie.setPosition(0);
             }

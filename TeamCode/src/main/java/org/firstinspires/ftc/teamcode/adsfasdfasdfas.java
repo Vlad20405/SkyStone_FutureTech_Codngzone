@@ -66,7 +66,9 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 @Autonomous(name="Pushbot: Auto By Encoder", group="Pushbot")
 //@Disabled
-public class adsfasdfasdfas extends LinearOpMode {
+public class
+
+adsfasdfasdfas extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime     runtime = new ElapsedTime();
