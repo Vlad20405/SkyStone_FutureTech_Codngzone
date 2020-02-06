@@ -93,6 +93,11 @@ public class BasicOpMode_Linear extends LinearOpMode {
         motor_brat.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor_cremaliera.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        stanga_fata.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        stanga_spate.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        dreapta_fata.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        dreapta_spate.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         waitForStart();
         runtime.reset();
 
@@ -102,28 +107,28 @@ public class BasicOpMode_Linear extends LinearOpMode {
         while (opModeIsActive()) {
 
             //codul pentru mechanum
-            stanga_fata.setPower(gamepad1.left_stick_y+gamepad1.right_stick_x+gamepad1.left_stick_x);
-            stanga_spate.setPower(gamepad1.left_stick_y+gamepad1.right_stick_x-gamepad1.left_stick_x);
-            dreapta_fata.setPower(gamepad1.left_stick_y-gamepad1.right_stick_x+gamepad1.left_stick_x);
-            dreapta_spate.setPower(gamepad1.left_stick_y-gamepad1.right_stick_x-gamepad1.left_stick_x);
+            stanga_fata.setPower((gamepad1.left_stick_y+gamepad1.right_stick_x+gamepad1.left_stick_x)*1);
+            stanga_spate.setPower((gamepad1.left_stick_y+gamepad1.right_stick_x-gamepad1.left_stick_x)*1);
+            dreapta_fata.setPower((gamepad1.left_stick_y-gamepad1.right_stick_x+gamepad1.left_stick_x)*1);
+            dreapta_spate.setPower((gamepad1.left_stick_y-gamepad1.right_stick_x-gamepad1.left_stick_x)*1);
 
 
             //codul pentru brat
-            motor_brat.setPower(gamepad2.left_stick_y*0.5);
+            motor_brat.setPower(gamepad2.left_stick_y);
             motor_cremaliera.setPower(gamepad2.left_trigger);
             motor_cremaliera.setPower(-gamepad2.right_trigger);
 
-            if(gamepad2.a){
-                pozitie_servo2=pozitie_servo2+0.01;
+            if(gamepad2.right_stick_x>0){
+                pozitie_servo2=pozitie_servo2+0.001;
             }
-            if (gamepad2.b){
-                pozitie_servo2=pozitie_servo2-0.01;
+            if (gamepad2.right_stick_x<0){
+                pozitie_servo2=pozitie_servo2-0.001;
             }
-            if(gamepad2.x){
-                pozitie_servo1=pozitie_servo1+0.01;
+            if(gamepad2.right_stick_y>0){
+                pozitie_servo1=pozitie_servo1+0.001;
             }
-            if(gamepad2.y){
-                pozitie_servo1=pozitie_servo1-0.01;
+            if(gamepad2.right_stick_y<0){
+                pozitie_servo1=pozitie_servo1-0.001;
             }
             if(gamepad2.left_bumper) {
                 servo_cleste.setPosition(1);
