@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
@@ -83,6 +84,14 @@ public class adsfasdfasdfas extends LinearOpMode {
     private  DcMotor stanga_s=null;
     private  DcMotor dreapta_f=null;
     private  DcMotor dreapta_s=null;
+
+    private DcMotor motor_brat= null;
+    private DcMotor motor_cremaliera = null;
+
+    private Servo servo_cleste=null;
+    private Servo servo_gimbal_1=null;
+    private Servo servo_gimbal_2=null;
+    private Servo servo_cutie=null;
     
 
     @Override
@@ -102,6 +111,15 @@ public class adsfasdfasdfas extends LinearOpMode {
         dreapta_f = hardwareMap.get(DcMotor.class,"dreapta_f");
         dreapta_s = hardwareMap.get(DcMotor.class,"dreapta_s");
 
+        motor_brat=hardwareMap.get(DcMotor.class,"motor_brat");
+        motor_cremaliera=hardwareMap.get(DcMotor.class,"motor_cremaliera");
+
+        servo_cleste=hardwareMap.get(Servo.class,"servo_cleste");
+        servo_gimbal_1=hardwareMap.get(Servo.class,"servo_gimba1");
+        servo_gimbal_2=hardwareMap.get(Servo.class,"servo_gimba2");
+
+        servo_cutie=hardwareMap.get(Servo.class,"servo_cutie");
+
         stanga_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         stanga_s.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         dreapta_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -116,6 +134,9 @@ public class adsfasdfasdfas extends LinearOpMode {
         stanga_s.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         dreapta_f.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         dreapta_s.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        motor_cremaliera.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motor_brat.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         telemetry.addData("Path0",  "Starting at %7d :%7d",
                           stanga_f.getCurrentPosition(),
@@ -162,7 +183,7 @@ public class adsfasdfasdfas extends LinearOpMode {
             stanga_f.setTargetPosition(newLeftTarget_f+latLeftTarget_f);
             stanga_s.setTargetPosition(newLeftTarget_s-latLeftTarget_s);
             dreapta_f.setTargetPosition(newRightTarget_f-latRightTarget_f);
-            dreapta_s.setTargetPosition(newRightTarget_s+latRightTarget_f);
+            dreapta_s.setTargetPosition(newRightTarget_s+latRightTarget_s);
             // Turn On RUN_TO_POSITION
             stanga_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             stanga_s.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -250,6 +271,45 @@ public class adsfasdfasdfas extends LinearOpMode {
 
             stanga_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             stanga_s.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        }
+    }
+
+    public void brat(double speed, double movement, double timeoutS) {
+        int movement_do;
+
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            movement_do = motor_cremaliera.getCurrentPosition() + (int)(movement * COUNTS_PER_INCH);
+
+
+            stanga_f.setTargetPosition(movement_do);
+
+
+            // Turn On RUN_TO_POSITION
+            motor_cremaliera.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+            runtime.reset();
+            motor_cremaliera.setPower(Math.abs(speed));
+
+
+
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (stanga_f.isBusy() && stanga_s.isBusy() &&dreapta_f.isBusy() && dreapta_s.isBusy())) {
+
+                telemetry.addData("Path1" , movement_do);
+                telemetry.addData("Path2", motor_cremaliera.getCurrentPosition());
+            }
+
+            // Stop all motion;
+            motor_cremaliera.setPower(0);
+
+            motor_cremaliera.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         }
     }
