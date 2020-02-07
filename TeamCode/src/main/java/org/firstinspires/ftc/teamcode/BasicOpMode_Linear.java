@@ -114,21 +114,21 @@ public class BasicOpMode_Linear extends LinearOpMode {
 
 
             //codul pentru brat
-            motor_brat.setPower(gamepad2.left_stick_y);
+            motor_brat.setPower(gamepad2.left_stick_y*0.3);
             motor_cremaliera.setPower(gamepad2.left_trigger);
             motor_cremaliera.setPower(-gamepad2.right_trigger);
 
-            if(gamepad2.right_stick_x>0){
-                pozitie_servo2=pozitie_servo2+0.001;
-            }
-            if (gamepad2.right_stick_x<0){
-                pozitie_servo2=pozitie_servo2-0.001;
-            }
             if(gamepad2.right_stick_y>0){
-                pozitie_servo1=pozitie_servo1+0.001;
+                pozitie_servo2=pozitie_servo2+0.005;
             }
-            if(gamepad2.right_stick_y<0){
-                pozitie_servo1=pozitie_servo1-0.001;
+            if (gamepad2.right_stick_y<0){
+                pozitie_servo2=pozitie_servo2-0.005;
+            }
+            if(gamepad2.right_stick_x>0){
+                pozitie_servo1=pozitie_servo1+0.005;
+            }
+            if(gamepad2.right_stick_x<0){
+                pozitie_servo1=pozitie_servo1-0.005;
             }
             if(gamepad2.left_bumper) {
                 servo_cleste.setPosition(1);

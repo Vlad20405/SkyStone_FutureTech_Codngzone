@@ -135,6 +135,11 @@ public class adsfasdfasdfas extends LinearOpMode {
         dreapta_f.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         dreapta_s.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        stanga_f.setDirection(DcMotor.Direction.FORWARD);
+        stanga_s.setDirection(DcMotor.Direction.FORWARD);
+        dreapta_f.setDirection(DcMotor.Direction.REVERSE);
+        dreapta_s.setDirection(DcMotor.Direction.REVERSE);
+
         motor_cremaliera.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor_brat.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -148,10 +153,7 @@ public class adsfasdfasdfas extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
-
+        brat(0.3,-30,10);
 
 
         telemetry.addData("Path", "Complete");
@@ -180,8 +182,8 @@ public class adsfasdfasdfas extends LinearOpMode {
             int latRightTarget_f= dreapta_f.getCurrentPosition() + (int) (lat * COUNTS_PER_INCH);
             int latRightTarget_s = dreapta_s.getCurrentPosition() + (int) (lat * COUNTS_PER_INCH);
 
-            stanga_f.setTargetPosition(newLeftTarget_f+latLeftTarget_f);
-            stanga_s.setTargetPosition(newLeftTarget_s-latLeftTarget_s);
+            stanga_f.setTargetPosition(newLeftTarget_f-latLeftTarget_f);
+            stanga_s.setTargetPosition(newLeftTarget_s+latLeftTarget_s);
             dreapta_f.setTargetPosition(newRightTarget_f-latRightTarget_f);
             dreapta_s.setTargetPosition(newRightTarget_s+latRightTarget_s);
             // Turn On RUN_TO_POSITION
@@ -212,6 +214,8 @@ public class adsfasdfasdfas extends LinearOpMode {
             // Stop all motion;
             stanga_f.setPower(0);
             stanga_s.setPower(0);
+            dreapta_s.setPower(0);
+            dreapta_f.setPower(0);
 
             stanga_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             stanga_s.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -268,6 +272,8 @@ public class adsfasdfasdfas extends LinearOpMode {
             // Stop all motion;
             stanga_f.setPower(0);
             stanga_s.setPower(0);
+            dreapta_s.setPower(0);
+            stanga_f.setPower(0);
 
             stanga_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             stanga_s.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -275,7 +281,7 @@ public class adsfasdfasdfas extends LinearOpMode {
         }
     }
 
-    public void brat(double speed, double movement, double timeoutS) {
+    public void cremaliera(double speed, double movement, double timeoutS) {
         int movement_do;
 
 
@@ -286,7 +292,7 @@ public class adsfasdfasdfas extends LinearOpMode {
             movement_do = motor_cremaliera.getCurrentPosition() + (int)(movement * COUNTS_PER_INCH);
 
 
-            stanga_f.setTargetPosition(movement_do);
+            motor_cremaliera.setTargetPosition(movement_do);
 
 
             // Turn On RUN_TO_POSITION
@@ -300,7 +306,7 @@ public class adsfasdfasdfas extends LinearOpMode {
 
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
-                    (stanga_f.isBusy() && stanga_s.isBusy() &&dreapta_f.isBusy() && dreapta_s.isBusy())) {
+                    (motor_cremaliera.isBusy() )) {
 
                 telemetry.addData("Path1" , movement_do);
                 telemetry.addData("Path2", motor_cremaliera.getCurrentPosition());
@@ -310,6 +316,45 @@ public class adsfasdfasdfas extends LinearOpMode {
             motor_cremaliera.setPower(0);
 
             motor_cremaliera.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        }
+    }
+
+    public void brat(double speed, double movement, double timeoutS) {
+        int movement_do;
+
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            movement_do = motor_brat.getCurrentPosition() + (int)(movement * COUNTS_PER_INCH);
+
+
+            motor_brat.setTargetPosition(movement_do);
+
+
+            // Turn On RUN_TO_POSITION
+            motor_brat.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+            runtime.reset();
+            motor_brat.setPower(Math.abs(speed));
+
+
+
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (motor_brat.isBusy())) {
+
+                telemetry.addData("Path1" , movement_do);
+                telemetry.addData("Path2", motor_cremaliera.getCurrentPosition());
+            }
+
+            // Stop all motion;
+            motor_brat.setPower(0);
+
+            motor_brat.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         }
     }
