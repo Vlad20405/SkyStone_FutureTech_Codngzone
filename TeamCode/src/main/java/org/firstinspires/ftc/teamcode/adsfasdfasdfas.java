@@ -33,9 +33,16 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+
+import java.util.List;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -71,6 +78,19 @@ public class
 adsfasdfasdfas extends LinearOpMode {
 
     /* Declare OpMode members. */
+
+
+    private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
+    private static final String LABEL_FIRST_ELEMENT = "Stone";
+    private static final String LABEL_SECOND_ELEMENT = "Skystone";
+
+    private static final String VUFORIA_KEY =
+            "AStJnD3/////AAABmSbeJsgIn0i0lCVUWxTrdiJtlmoJSTgwubOWegTxmEdsFzJkBuin+7gNMqUApOj8XkwLsbgKdDM2VsiC5ttIAUxBasPjSgQ5NLOLbkEX8E5hSWmmO73F3SBXRKP43WSNSCYDNRQdC3ZuGaVNn/3Xt3K5P82/890LHtbxK1NJc+R8bGZEH2bCAly6e1xYGkTbfaGSHkvnIxtQQl3XstJL9Q96D9MSZEcbSjr8JYB5NsoOujufJRkxsIhtmpshfxzyHNs9Xo+4QlQL2AHj/F0NCYMfqOTk19C12o8jJ2YeQkHEib2OBHmVKMi+V/ptEAEeRTmkEHBNNew8j5sd0gNLJmTo/CXFy3f/Fp0ZBgM21dy2";
+
+    private VuforiaLocalizer vuforia;
+    private TFObjectDetector tfod;
+
+
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
@@ -85,17 +105,22 @@ adsfasdfasdfas extends LinearOpMode {
     private  DcMotor stanga_s=null;
     private  DcMotor dreapta_f=null;
     private  DcMotor dreapta_s=null;
+
+    private DcMotor motor_brat= null;
+    private DcMotor motor_cremaliera = null;
+
+    private Servo servo_cleste=null;
+    private Servo servo_gimbal_1=null;
+    private Servo servo_gimbal_2=null;
+    private Servo servo_cutie=null;
     
 
     @Override
     public void runOpMode() {
 
-        /*
-         * Initialize the drive system variables.
-         * The init() method of the hardware class does all the work here
-         */
 
-        // Send telemetry message to signify robot waiting;
+
+
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
 
@@ -104,44 +129,160 @@ adsfasdfasdfas extends LinearOpMode {
         dreapta_f = hardwareMap.get(DcMotor.class,"dreapta_f");
         dreapta_s = hardwareMap.get(DcMotor.class,"dreapta_s");
 
+        motor_brat=hardwareMap.get(DcMotor.class,"motor_brat");
+        motor_cremaliera=hardwareMap.get(DcMotor.class,"motor_cremaliera");
 
+        servo_cleste=hardwareMap.get(Servo.class,"servo_cleste");
+        servo_gimbal_1=hardwareMap.get(Servo.class,"servo_gimba1");
+        servo_gimbal_2=hardwareMap.get(Servo.class,"servo_gimba2");
+
+        servo_cutie=hardwareMap.get(Servo.class,"servo_cutie");
 
         stanga_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         stanga_s.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        dreapta_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        dreapta_s.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         stanga_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         stanga_s.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        dreapta_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        dreapta_s.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // Send telemetry message to indicate successful Encoder reset
+        stanga_f.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        stanga_s.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        dreapta_f.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        dreapta_s.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        stanga_f.setDirection(DcMotor.Direction.FORWARD);
+        stanga_s.setDirection(DcMotor.Direction.FORWARD);
+        dreapta_f.setDirection(DcMotor.Direction.REVERSE);
+        dreapta_s.setDirection(DcMotor.Direction.REVERSE);
+
+        motor_cremaliera.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motor_brat.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         telemetry.addData("Path0",  "Starting at %7d :%7d",
                           stanga_f.getCurrentPosition(),
                           stanga_s.getCurrentPosition());
         telemetry.update();
 
+        initVuforia();
+
+        if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
+            initTfod();
+        } else {
+            telemetry.addData("Sorry!", "This device is not compatible with TFOD");
+        }
+
+        /**
+         * Activate TensorFlow Object Detection before we wait for the start command.
+         * Do it here so that the Camera Stream window will have the TensorFlow annotations visible.
+         **/
+        if (tfod != null) {
+            tfod.activate();
+        }
+
+        /** Wait for the game to begin */
+        telemetry.addData(">", "Press Play to start op mode");
+        telemetry.update();
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+        if (opModeIsActive()) {
+            while (opModeIsActive()) {
+                if (tfod != null) {
+                    // getUpdatedRecognitions() will return null if no new information is available since
+                    // the last time that call was made.
+                    List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                    if (updatedRecognitions != null) {
+                        telemetry.addData("# Object Detected", updatedRecognitions.size());
+
+                        // step through the list of recognitions and display boundary info.
+                        int i = 0;
+                        for (Recognition recognition : updatedRecognitions) {
+                            telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
+                            telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
+                                    recognition.getLeft(), recognition.getTop());
+                            telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
+                                    recognition.getRight(), recognition.getBottom());
+                        }
+                        telemetry.update();
+                    }
+                }
+            }
+        }
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        brat(0.3,-30,10);
 
-
-        sleep(1000);     // pause for servos to move
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
 
-    /*
-     *  Method to perfmorm a relative move, based on encoder counts.
-     *  Encoders are not reset as the move is based on the current position.
-     *  Move will stop if any of three conditions occur:
-     *  1) Move gets to the desired position
-     *  2) Move runs out of time
-     *  3) Driver stops the opmode running.
-     */
+    public void straif(double speed,
+                             double forwardMovement, double lat,
+                             double timeoutS) {
+        int newLeftTarget_f;
+        int newLeftTarget_s;
+        int newRightTarget_f;
+        int newRightTarget_s;
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newLeftTarget_f = stanga_f.getCurrentPosition() + (int)(forwardMovement * COUNTS_PER_INCH);
+            newLeftTarget_s = stanga_s.getCurrentPosition() + (int)(forwardMovement * COUNTS_PER_INCH);
+            newRightTarget_f= dreapta_f.getCurrentPosition() + (int) (forwardMovement * COUNTS_PER_INCH);
+            newRightTarget_s= dreapta_s.getCurrentPosition() + (int) (forwardMovement *COUNTS_PER_INCH);
+
+            int latLeftTarget_f = stanga_f.getCurrentPosition() + (int)( lat* COUNTS_PER_INCH);
+            int latLeftTarget_s = stanga_s.getCurrentPosition() + (int)(lat * COUNTS_PER_INCH);
+            int latRightTarget_f= dreapta_f.getCurrentPosition() + (int) (lat * COUNTS_PER_INCH);
+            int latRightTarget_s = dreapta_s.getCurrentPosition() + (int) (lat * COUNTS_PER_INCH);
+
+            stanga_f.setTargetPosition(newLeftTarget_f-latLeftTarget_f);
+            stanga_s.setTargetPosition(newLeftTarget_s+latLeftTarget_s);
+            dreapta_f.setTargetPosition(newRightTarget_f-latRightTarget_f);
+            dreapta_s.setTargetPosition(newRightTarget_s+latRightTarget_s);
+            // Turn On RUN_TO_POSITION
+            stanga_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            stanga_s.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            dreapta_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            dreapta_s.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+            runtime.reset();
+            stanga_f.setPower(Math.abs(speed));
+            stanga_s.setPower(Math.abs(speed));
+            dreapta_f.setPower(Math.abs(speed));
+            dreapta_s.setPower(Math.abs(speed));
+
+
+            while (opModeIsActive() &&
+                   (runtime.seconds() < timeoutS) &&
+                   (stanga_f.isBusy() && stanga_s.isBusy() &&dreapta_f.isBusy() && dreapta_s.isBusy())) {
+
+                telemetry.addData("Path1",  "Running to %7d :%7d : %7d : %7d" , newLeftTarget_f,  newLeftTarget_s, newRightTarget_s, newRightTarget_f);
+                telemetry.addData("Path2",  "Running at %7d :%7d : %7d : %7d",
+                                            stanga_f.getCurrentPosition(),
+                                            stanga_s.getCurrentPosition(), dreapta_s.getCurrentPosition(), dreapta_f.getCurrentPosition());
+                telemetry.update();
+            }
+
+            // Stop all motion;
+            stanga_f.setPower(0);
+            stanga_s.setPower(0);
+            dreapta_s.setPower(0);
+            dreapta_f.setPower(0);
+
+            stanga_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            stanga_s.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        }
+    }
+
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
                              double timeoutS) {
@@ -169,40 +310,139 @@ adsfasdfasdfas extends LinearOpMode {
             dreapta_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             dreapta_s.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            // reset the timeout time and start motion.
+
             runtime.reset();
             stanga_f.setPower(Math.abs(speed));
             stanga_s.setPower(Math.abs(speed));
             dreapta_f.setPower(Math.abs(speed));
             dreapta_s.setPower(Math.abs(speed));
 
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-            // its target position, the motion will stop.  This is "safer" in the event that the robot will
-            // always end the motion as soon as possible.
-            // However, if you require that BOTH motors have finished their moves before the robot continues
-            // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while (opModeIsActive() &&
-                   (runtime.seconds() < timeoutS) &&
-                   (stanga_f.isBusy() && stanga_s.isBusy() &&dreapta_f.isBusy() && dreapta_s.isBusy())) {
 
-                // Display it for the driver.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (stanga_f.isBusy() && stanga_s.isBusy() &&dreapta_f.isBusy() && dreapta_s.isBusy())) {
+
                 telemetry.addData("Path1",  "Running to %7d :%7d : %7d : %7d" , newLeftTarget_f,  newLeftTarget_s, newRightTarget_s, newRightTarget_f);
                 telemetry.addData("Path2",  "Running at %7d :%7d : %7d : %7d",
-                                            stanga_f.getCurrentPosition(),
-                                            stanga_s.getCurrentPosition(), dreapta_s.getCurrentPosition(), dreapta_f.getCurrentPosition());
+                        stanga_f.getCurrentPosition(),
+                        stanga_s.getCurrentPosition(), dreapta_s.getCurrentPosition(), dreapta_f.getCurrentPosition());
                 telemetry.update();
             }
 
             // Stop all motion;
             stanga_f.setPower(0);
             stanga_s.setPower(0);
+            dreapta_s.setPower(0);
+            stanga_f.setPower(0);
 
-            // Turn off RUN_TO_POSITION
             stanga_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             stanga_s.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            //  sleep(250);   // optional pause after each move
         }
+    }
+
+    public void cremaliera(double speed, double movement, double timeoutS) {
+        int movement_do;
+
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            movement_do = motor_cremaliera.getCurrentPosition() + (int)(movement * COUNTS_PER_INCH);
+
+
+            motor_cremaliera.setTargetPosition(movement_do);
+
+
+            // Turn On RUN_TO_POSITION
+            motor_cremaliera.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+            runtime.reset();
+            motor_cremaliera.setPower(Math.abs(speed));
+
+
+
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (motor_cremaliera.isBusy() )) {
+
+                telemetry.addData("Path1" , movement_do);
+                telemetry.addData("Path2", motor_cremaliera.getCurrentPosition());
+            }
+
+            // Stop all motion;
+            motor_cremaliera.setPower(0);
+
+            motor_cremaliera.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        }
+    }
+
+    public void brat(double speed, double movement, double timeoutS) {
+        int movement_do;
+
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            movement_do = motor_brat.getCurrentPosition() + (int)(movement * COUNTS_PER_INCH);
+
+
+            motor_brat.setTargetPosition(movement_do);
+
+
+            // Turn On RUN_TO_POSITION
+            motor_brat.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+            runtime.reset();
+            motor_brat.setPower(Math.abs(speed));
+
+
+
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (motor_brat.isBusy())) {
+
+                telemetry.addData("Path1" , movement_do);
+                telemetry.addData("Path2", motor_cremaliera.getCurrentPosition());
+            }
+
+            // Stop all motion;
+            motor_brat.setPower(0);
+
+            motor_brat.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        }
+    }
+
+    private void initVuforia() {
+        /*
+         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
+         */
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+
+        //  Instantiate the Vuforia engine
+        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+
+        // Loading trackables is not necessary for the TensorFlow Object Detection engine.
+    }
+
+    /**
+     * Initialize the TensorFlow Object Detection engine.
+     */
+    private void initTfod() {
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfodParameters.minimumConfidence = 0.8;
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }
 }
