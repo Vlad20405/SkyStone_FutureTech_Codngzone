@@ -419,6 +419,7 @@ adsfasdfasdfas extends LinearOpMode {
         }
     }
 
+
     private void initVuforia() {
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
