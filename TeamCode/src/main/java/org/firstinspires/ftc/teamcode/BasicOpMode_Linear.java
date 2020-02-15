@@ -114,7 +114,6 @@ public class BasicOpMode_Linear extends LinearOpMode {
             dreapta_spate.setPower((gamepad1.left_stick_y-gamepad1.right_stick_x-gamepad1.left_stick_x)*(+speedAjust/10));
 
             //codul pentru brat
-
             motor_brat.setPower(gamepad2.left_stick_y*0.5);
             motor_cremaliera.setPower(gamepad2.left_trigger);
             motor_cremaliera.setPower(-gamepad2.right_trigger);
