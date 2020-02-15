@@ -92,7 +92,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
 
         motor_brat.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor_cremaliera.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
+        double speedAjust=20;
         waitForStart();
         runtime.reset();
 
@@ -100,25 +100,24 @@ public class BasicOpMode_Linear extends LinearOpMode {
 
 
         while (opModeIsActive()) {
+            if(gamepad1.dpad_down == true){
+                speedAjust -=1;
+            }
+            if(gamepad1.dpad_up == true){
+                speedAjust +=1;
+            }
 
             //codul pentru mechanum
-            stanga_fata.setPower(gamepad1.left_stick_y+gamepad1.right_stick_x+gamepad1.left_stick_x);
-            stanga_spate.setPower(gamepad1.left_stick_y+gamepad1.right_stick_x-gamepad1.left_stick_x);
-            dreapta_fata.setPower(gamepad1.left_stick_y-gamepad1.right_stick_x+gamepad1.left_stick_x);
-            dreapta_spate.setPower(gamepad1.left_stick_y-gamepad1.right_stick_x-gamepad1.left_stick_x);
-
+            stanga_fata.setPower((gamepad1.left_stick_y+gamepad1.right_stick_x+gamepad1.left_stick_x)*(+speedAjust/10));
+            stanga_spate.setPower((gamepad1.left_stick_y+gamepad1.right_stick_x-gamepad1.left_stick_x)*(+speedAjust/10));
+            dreapta_fata.setPower((gamepad1.left_stick_y-gamepad1.right_stick_x+gamepad1.left_stick_x)*(+speedAjust/10));
+            dreapta_spate.setPower((gamepad1.left_stick_y-gamepad1.right_stick_x-gamepad1.left_stick_x)*(+speedAjust/10));
 
             //codul pentru brat
             motor_brat.setPower(gamepad2.left_stick_y*0.5);
             motor_cremaliera.setPower(gamepad2.left_trigger);
             motor_cremaliera.setPower(-gamepad2.right_trigger);
 
-            if(gamepad2.a){
-                pozitie_servo2=pozitie_servo2+0.01;
-            }
-            if (gamepad2.b){
-                pozitie_servo2=pozitie_servo2-0.01;
-            }
             if(gamepad2.x){
                 pozitie_servo1=pozitie_servo1+0.01;
             }
@@ -143,7 +142,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
 
             servo_gimbal_2.setPosition(pozitie_servo2);
             servo_gimbal_1.setPosition(pozitie_servo1);
-
+            telemetry.addData("speedAjust",speedAjust);
             telemetry.addData("Valoare",gamepad2.right_stick_x);
             telemetry.addData("Status", "Run Time: " + runtime.toString());
 
