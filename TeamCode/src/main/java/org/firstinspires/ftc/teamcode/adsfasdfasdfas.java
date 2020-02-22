@@ -112,7 +112,8 @@ adsfasdfasdfas extends LinearOpMode {
     private Servo servo_cleste=null;
     private Servo servo_gimbal_1=null;
     private Servo servo_gimbal_2=null;
-    private Servo servo_cutie=null;
+    private Servo servo_cutie1=null;
+    private Servo servo_cutie2=null;
     
 
     @Override
@@ -136,7 +137,8 @@ adsfasdfasdfas extends LinearOpMode {
         servo_gimbal_1=hardwareMap.get(Servo.class,"servo_gimba1");
         servo_gimbal_2=hardwareMap.get(Servo.class,"servo_gimba2");
 
-        servo_cutie=hardwareMap.get(Servo.class,"servo_cutie");
+        servo_cutie1=hardwareMap.get(Servo.class,"servo_cutie");
+        servo_cutie2=hardwareMap.get(Servo.class,"servo_cutie");
 
         stanga_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         stanga_s.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -190,8 +192,21 @@ adsfasdfasdfas extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(1,-4,4,3.5);
-        straif(1,-15.5 ,0,5);
+        encoderDrive(1,-1,1,0.5);
+        straif(1,-40 ,0,3);
+        encoderDrive(1,1,-1,0.5);
+        straif(1,-20,0,1.5);
+        servo_cutie1.setPosition(1);
+        servo_cutie2.setPosition(1);
+        straif(1,20,0,1.5);
+        straif(1,0,20,2);
+        straif(1,-20,0,3);
+        encoderDrive(1,1,-1,0.5);
+        straif(1,-10,0,1.5);
+        encoderDrive(1,1,-1,0.5);
+        straif(1,-2,0,0.5);
+        encoderDrive(1,1,-1,0.5);
+        straif(1,-20,0,2.5);
 
 
 
