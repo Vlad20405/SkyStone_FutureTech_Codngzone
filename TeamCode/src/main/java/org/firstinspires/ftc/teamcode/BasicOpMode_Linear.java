@@ -57,7 +57,10 @@ public class BasicOpMode_Linear extends LinearOpMode {
     private Servo servo_cleste=null;
     private Servo servo_gimbal_1=null;
     private Servo servo_gimbal_2=null;
-    private Servo servo_cutie=null;
+    private Servo servo_cutie1=null;
+    private Servo servo_cutie2=null;
+
+
 
     double pozitie_servo1=0;
     double pozitie_servo2=0;
@@ -79,7 +82,8 @@ public class BasicOpMode_Linear extends LinearOpMode {
         servo_gimbal_1=hardwareMap.get(Servo.class,"servo_gimba1");
         servo_gimbal_2=hardwareMap.get(Servo.class,"servo_gimba2");
 
-        servo_cutie=hardwareMap.get(Servo.class,"servo_cutie");
+        servo_cutie1=hardwareMap.get(Servo.class,"servo_cutie1");
+        servo_cutie2=hardwareMap.get(Servo.class,"servo_cutie2");
 
 
         //setarile pentru motoare
@@ -131,11 +135,14 @@ public class BasicOpMode_Linear extends LinearOpMode {
                 servo_cleste.setPosition(0);
             }
             if(gamepad2.dpad_down){
-                servo_cutie.setPosition(1);
+                servo_cutie1.setPosition(1);
+                servo_cutie2.setPosition(1);
             }
             if(gamepad2.dpad_up){
 
-                servo_cutie.setPosition(0);
+                servo_cutie1.setPosition(0);
+                servo_cutie2.setPosition(0);
+
             }
             pozitie_servo1=Range.clip(pozitie_servo1,0,1);
             pozitie_servo2=Range.clip(pozitie_servo2,0,1);

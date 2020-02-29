@@ -137,8 +137,8 @@ adsfasdfasdfas extends LinearOpMode {
         servo_gimbal_1=hardwareMap.get(Servo.class,"servo_gimba1");
         servo_gimbal_2=hardwareMap.get(Servo.class,"servo_gimba2");
 
-        servo_cutie1=hardwareMap.get(Servo.class,"servo_cutie");
-        servo_cutie2=hardwareMap.get(Servo.class,"servo_cutie");
+        servo_cutie1=hardwareMap.get(Servo.class,"servo_cutie1");
+        servo_cutie2=hardwareMap.get(Servo.class,"servo_cutie2");
 
         stanga_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         stanga_s.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -199,6 +199,8 @@ adsfasdfasdfas extends LinearOpMode {
         servo_cutie1.setPosition(1);
         servo_cutie2.setPosition(1);
         straif(1,20,0,1.5);
+        servo_cutie1.setPosition(0);
+        servo_cutie2.setPosition(0);
         straif(1,0,20,2);
         straif(1,-20,0,3);
         encoderDrive(1,1,-1,0.5);
