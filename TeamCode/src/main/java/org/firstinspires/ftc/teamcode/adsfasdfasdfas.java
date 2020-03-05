@@ -197,13 +197,20 @@ adsfasdfasdfas extends LinearOpMode {
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
 
+        motor_brat.setPower(0.5);
+        int i=0;
+        while(i!=1.5);
+        i++;
+
+
+
         encoderDrive(1,-2.9,2.9,1.5);
         straif(1,-60 ,0,5);
         encoderDrive(1,2.9,-2.9,1.5);
         straif(1,-30,0,2);
 
-        servo_cutie1.setPosition(0.4);
-        servo_cutie2.setPosition(0.4);
+        servo_cutie1.setPosition(1);
+        servo_cutie2.setPosition(1);
 
         straif(1,30,0,2);
 
