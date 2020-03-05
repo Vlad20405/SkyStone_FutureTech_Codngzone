@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -116,6 +117,7 @@ adsfasdfasdfas extends LinearOpMode {
     private Servo servo_cutie2=null;
 
 
+
     @Override
     public void runOpMode() {
 
@@ -160,6 +162,8 @@ adsfasdfasdfas extends LinearOpMode {
         dreapta_f.setDirection(DcMotor.Direction.REVERSE);
         dreapta_s.setDirection(DcMotor.Direction.REVERSE);
 
+
+
         motor_cremaliera.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor_brat.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -192,24 +196,24 @@ adsfasdfasdfas extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(1,-1,1,0.5);
-        straif(1,-40 ,0,3);
-        encoderDrive(1,1,-1,0.5);
-        straif(1,-20,0,1.5);
-        servo_cutie1.setPosition(1);
-        servo_cutie2.setPosition(1);
-        straif(1,20,0,1.5);
+
+        encoderDrive(1,-2.9,2.9,1.5);
+        straif(1,-60 ,0,5);
+        encoderDrive(1,2.9,-2.9,1.5);
+        straif(1,-30,0,2);
+
+        servo_cutie1.setPosition(0.4);
+        servo_cutie2.setPosition(0.4);
+
+        straif(1,30,0,2);
+
         servo_cutie1.setPosition(0);
         servo_cutie2.setPosition(0);
-        straif(1,0,20,2);
-        straif(1,-20,0,3);
-        encoderDrive(1,1,-1,0.5);
-        straif(1,-10,0,1.5);
-        encoderDrive(1,1,-1,0.5);
-        straif(1,-2,0,0.5);
-        encoderDrive(1,1,-1,0.5);
-        straif(1,-20,0,2.5);
 
+        straif(1,0,10,2);
+        straif(1,-10,0,3);
+        encoderDrive(1,2.9,-2.9,1.5);
+        straif(1,-15,0,1.5);
 
 
         telemetry.addData("Path", "Complete");

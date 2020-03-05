@@ -47,10 +47,10 @@ public class BasicOpMode_Linear extends LinearOpMode {
 
     // Declaram variabilele
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor stanga_fata = null;
-    private DcMotor dreapta_fata = null;
-    private DcMotor stanga_spate = null;
-    private DcMotor dreapta_spate = null;
+    private DcMotor stanga_f= null;
+    private DcMotor dreapta_f = null;
+    private DcMotor stanga_s = null;
+    private DcMotor dreapta_s = null;
     private DcMotor motor_brat= null;
     private DcMotor motor_cremaliera = null;
 
@@ -70,10 +70,10 @@ public class BasicOpMode_Linear extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         //sincronizam variabilele cu ce avem in configuratie
-        stanga_fata  = hardwareMap.get(DcMotor.class, "stanga_f");
-        dreapta_fata = hardwareMap.get(DcMotor.class, "dreapta_f");
-        stanga_spate = hardwareMap.get(DcMotor.class, "stanga_s");
-        dreapta_spate = hardwareMap.get(DcMotor.class, "dreapta_s");
+        stanga_f  = hardwareMap.get(DcMotor.class, "stanga_f");
+        dreapta_f = hardwareMap.get(DcMotor.class, "dreapta_f");
+        stanga_s = hardwareMap.get(DcMotor.class, "stanga_s");
+        dreapta_s = hardwareMap.get(DcMotor.class, "dreapta_s");
 
         motor_brat=hardwareMap.get(DcMotor.class,"motor_brat");
         motor_cremaliera=hardwareMap.get(DcMotor.class,"motor_cremaliera");
@@ -87,10 +87,10 @@ public class BasicOpMode_Linear extends LinearOpMode {
 
 
         //setarile pentru motoare
-        stanga_fata.setDirection(DcMotor.Direction.FORWARD);
-        stanga_spate.setDirection(DcMotor.Direction.FORWARD);
-        dreapta_fata.setDirection(DcMotor.Direction.REVERSE);
-        dreapta_spate.setDirection(DcMotor.Direction.REVERSE);
+        stanga_f.setDirection(DcMotor.Direction.FORWARD);
+        stanga_s.setDirection(DcMotor.Direction.FORWARD);
+        dreapta_f.setDirection(DcMotor.Direction.REVERSE);
+        dreapta_s.setDirection(DcMotor.Direction.REVERSE);
 
         motor_brat.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -112,10 +112,10 @@ public class BasicOpMode_Linear extends LinearOpMode {
             }
 
             //codul pentru mechanum
-            stanga_fata.setPower((gamepad1.left_stick_y+gamepad1.right_stick_x+gamepad1.left_stick_x)*(+speedAjust/10));
-            stanga_spate.setPower((gamepad1.left_stick_y+gamepad1.right_stick_x-gamepad1.left_stick_x)*(+speedAjust/10));
-            dreapta_fata.setPower((gamepad1.left_stick_y-gamepad1.right_stick_x+gamepad1.left_stick_x)*(+speedAjust/10));
-            dreapta_spate.setPower((gamepad1.left_stick_y-gamepad1.right_stick_x-gamepad1.left_stick_x)*(+speedAjust/10));
+            stanga_f.setPower((gamepad1.left_stick_y+gamepad1.right_stick_x+gamepad1.left_stick_x)*(+speedAjust/10));
+            stanga_s.setPower((gamepad1.left_stick_y+gamepad1.right_stick_x-gamepad1.left_stick_x)*(+speedAjust/10));
+            dreapta_f.setPower((gamepad1.left_stick_y-gamepad1.right_stick_x+gamepad1.left_stick_x)*(+speedAjust/10));
+            dreapta_s.setPower((gamepad1.left_stick_y-gamepad1.right_stick_x-gamepad1.left_stick_x)*(+speedAjust/10));
 
             //codul pentru brat
             motor_brat.setPower(gamepad2.left_stick_y*0.5);
