@@ -92,11 +92,12 @@ public class BasicOpMode_Linear extends LinearOpMode {
         dreapta_f.setDirection(DcMotor.Direction.REVERSE);
         dreapta_s.setDirection(DcMotor.Direction.REVERSE);
 
+
         motor_brat.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         motor_brat.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor_cremaliera.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        double speedAjust=20;
+        double speedAjust=7;
         waitForStart();
         runtime.reset();
 

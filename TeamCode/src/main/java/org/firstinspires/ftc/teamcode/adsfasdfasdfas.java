@@ -196,25 +196,39 @@ adsfasdfasdfas extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
+        int i;
+        i=1;
+        while(i!=2) {
+            if (i==1) {
+                motor_brat.setPower(1);
+                i++;
+            }
+        }
+        if(i==2){
+            motor_brat.setPower(0);
+        i++;
+        }
+        if(i==3) {
+            encoderDrive(1, -2, 2, 1);
+            straif(1, -60, 0, 6);
+            encoderDrive(1, 2, -2, 1);
+            straif(1, -30, 0, 3);
 
 
-        encoderDrive(1,-2.5,2.5,1.3);
-        straif(1,-70 ,0,7);
-        encoderDrive(1,2.5,-2.5,1.3);
-        straif(1,-30,0,2);
+            servo_cutie1.setPosition(1);
+            servo_cutie2.setPosition(1);
 
-        servo_cutie1.setPosition(1);
-        servo_cutie2.setPosition(1);
+            straif(0,0,0,2);
+            straif(1, 30, 0, 3);
 
-        straif(1,30,0,2);
+            servo_cutie1.setPosition(0);
+            servo_cutie2.setPosition(0);
 
-        servo_cutie1.setPosition(0);
-        servo_cutie2.setPosition(0);
-
-        straif(1,0,10,2);
-        straif(1,-10,0,3);
-        encoderDrive(1,2.9,-2.9,1.5);
-        straif(1,-15,0,1.5);
+            straif(1, 0, 5, 2);
+            straif(1, -4, 0, 2);
+            encoderDrive(1, 2, -2, 1);
+            straif(1, -7, 0, 2);
+        }
 
 
         telemetry.addData("Path", "Complete");
@@ -280,6 +294,8 @@ adsfasdfasdfas extends LinearOpMode {
 
             stanga_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             stanga_s.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            dreapta_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            dreapta_s.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         }
     }
@@ -338,6 +354,8 @@ adsfasdfasdfas extends LinearOpMode {
 
             stanga_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             stanga_s.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            dreapta_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            dreapta_s.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         }
     }
