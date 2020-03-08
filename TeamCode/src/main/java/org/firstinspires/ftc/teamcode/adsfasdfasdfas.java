@@ -198,12 +198,13 @@ adsfasdfasdfas extends LinearOpMode {
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         int i;
         i=1;
-        while(i!=2) {
-            if (i==1) {
-                motor_brat.setPower(1);
-                i++;
-            }
+          motor_brat.setPower(1);
+        while(i!=200000) {
+          i++;
+      
         }
+          motor_brat.setPower(0);
+        i=2;
         if(i==2){
             motor_brat.setPower(0);
         i++;
