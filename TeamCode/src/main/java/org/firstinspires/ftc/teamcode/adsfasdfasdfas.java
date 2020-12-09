@@ -29,16 +29,19 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
@@ -92,55 +95,54 @@ adsfasdfasdfas extends LinearOpMode {
     private TFObjectDetector tfod;
 
 
-    private ElapsedTime     runtime = new ElapsedTime();
+    private ElapsedTime runtime = new ElapsedTime();
 
-    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-                                                      (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.6;
-    static final double     TURN_SPEED              = 0.5;
+    static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
+    static final double DRIVE_GEAR_REDUCTION = 2.0;     // This is < 1.0 if geared UP
+    static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
+    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * 3.1415);
+    static final double DRIVE_SPEED = 0.6;
+    static final double TURN_SPEED = 0.5;
 
-    private DcMotor stanga_f=null;
-    private  DcMotor stanga_s=null;
-    private  DcMotor dreapta_f=null;
-    private  DcMotor dreapta_s=null;
+    private DcMotor stanga_f = null;
+    private DcMotor stanga_s = null;
+    private DcMotor dreapta_f = null;
+    private DcMotor dreapta_s = null;
 
-    private DcMotor motor_brat= null;
+    private DcMotor motor_brat = null;
     private DcMotor motor_cremaliera = null;
 
-    private Servo servo_cleste=null;
-    private Servo servo_gimbal_1=null;
-    private Servo servo_gimbal_2=null;
-    private Servo servo_cutie1=null;
-    private Servo servo_cutie2=null;
+    private Servo servo_cleste = null;
+    private Servo servo_gimbal_1 = null;
+    private Servo servo_gimbal_2 = null;
+    private Servo servo_cutie1 = null;
+    private Servo servo_cutie2 = null;
 
+    private DistanceSensor sensorRange;
 
 
     @Override
     public void runOpMode() {
 
 
-
-
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
 
-        stanga_f  = hardwareMap.get(DcMotor.class, "stanga_f");
+        stanga_f = hardwareMap.get(DcMotor.class, "stanga_f");
         stanga_s = hardwareMap.get(DcMotor.class, "stanga_s");
-        dreapta_f = hardwareMap.get(DcMotor.class,"dreapta_f");
-        dreapta_s = hardwareMap.get(DcMotor.class,"dreapta_s");
+        dreapta_f = hardwareMap.get(DcMotor.class, "dreapta_f");
+        dreapta_s = hardwareMap.get(DcMotor.class, "dreapta_s");
 
-        motor_brat=hardwareMap.get(DcMotor.class,"motor_brat");
-        motor_cremaliera=hardwareMap.get(DcMotor.class,"motor_cremaliera");
+        motor_brat = hardwareMap.get(DcMotor.class, "motor_brat");
+        motor_cremaliera = hardwareMap.get(DcMotor.class, "motor_cremaliera");
 
-        servo_cleste=hardwareMap.get(Servo.class,"servo_cleste");
-        servo_gimbal_1=hardwareMap.get(Servo.class,"servo_gimba1");
-        servo_gimbal_2=hardwareMap.get(Servo.class,"servo_gimba2");
+        servo_cleste = hardwareMap.get(Servo.class, "servo_cleste");
+        servo_gimbal_1 = hardwareMap.get(Servo.class, "servo_gimba1");
+        servo_gimbal_2 = hardwareMap.get(Servo.class, "servo_gimba2");
 
-        servo_cutie1=hardwareMap.get(Servo.class,"servo_cutie1");
-        servo_cutie2=hardwareMap.get(Servo.class,"servo_cutie2");
+        servo_cutie1 = hardwareMap.get(Servo.class, "servo_cutie1");
+        servo_cutie2 = hardwareMap.get(Servo.class, "servo_cutie2");
 
         stanga_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         stanga_s.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -163,13 +165,12 @@ adsfasdfasdfas extends LinearOpMode {
         dreapta_s.setDirection(DcMotor.Direction.REVERSE);
 
 
-
         motor_cremaliera.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor_brat.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        telemetry.addData("Path0",  "Starting at %7d :%7d",
-                          stanga_f.getCurrentPosition(),
-                          stanga_s.getCurrentPosition());
+        telemetry.addData("Path0", "Starting at %7d :%7d",
+                stanga_f.getCurrentPosition(),
+                stanga_s.getCurrentPosition());
         telemetry.update();
 
         initVuforia();
@@ -197,19 +198,19 @@ adsfasdfasdfas extends LinearOpMode {
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         int i;
-        i=1;
-          motor_brat.setPower(1);
-        while(i!=200000) {
-          i++;
-      
+        i = 1;
+        motor_brat.setPower(1);
+        while (i != 200000) {
+            i++;
+
         }
-          motor_brat.setPower(0);
-        i=2;
-        if(i==2){
+        motor_brat.setPower(0);
+        i = 2;
+        if (i == 2) {
             motor_brat.setPower(0);
-        i++;
+            i++;
         }
-        if(i==3) {
+        if (i == 3) {
             encoderDrive(1, -2, 2, 1);
             straif(1, -60, 0, 6);
             encoderDrive(1, 2, -2, 1);
@@ -219,7 +220,7 @@ adsfasdfasdfas extends LinearOpMode {
             servo_cutie1.setPosition(1);
             servo_cutie2.setPosition(1);
 
-            straif(0,0,0,2);
+            straif(0, 0, 0, 2);
             straif(1, 30, 0, 3);
 
             servo_cutie1.setPosition(0);
@@ -237,8 +238,8 @@ adsfasdfasdfas extends LinearOpMode {
     }
 
     public void straif(double speed,
-                             double forwardMovement, double lat,
-                             double timeoutS) {
+                       double forwardMovement, double lat,
+                       double timeoutS) {
         int newLeftTarget_f;
         int newLeftTarget_s;
         int newRightTarget_f;
@@ -248,20 +249,20 @@ adsfasdfasdfas extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget_f = stanga_f.getCurrentPosition() + (int)(forwardMovement * COUNTS_PER_INCH);
-            newLeftTarget_s = stanga_s.getCurrentPosition() + (int)(forwardMovement * COUNTS_PER_INCH);
-            newRightTarget_f= dreapta_f.getCurrentPosition() + (int) (forwardMovement * COUNTS_PER_INCH);
-            newRightTarget_s= dreapta_s.getCurrentPosition() + (int) (forwardMovement *COUNTS_PER_INCH);
+            newLeftTarget_f = stanga_f.getCurrentPosition() + (int) (forwardMovement * COUNTS_PER_INCH);
+            newLeftTarget_s = stanga_s.getCurrentPosition() + (int) (forwardMovement * COUNTS_PER_INCH);
+            newRightTarget_f = dreapta_f.getCurrentPosition() + (int) (forwardMovement * COUNTS_PER_INCH);
+            newRightTarget_s = dreapta_s.getCurrentPosition() + (int) (forwardMovement * COUNTS_PER_INCH);
 
-            int latLeftTarget_f = stanga_f.getCurrentPosition() + (int)( lat* COUNTS_PER_INCH);
-            int latLeftTarget_s = stanga_s.getCurrentPosition() + (int)(lat * COUNTS_PER_INCH);
-            int latRightTarget_f= dreapta_f.getCurrentPosition() + (int) (lat * COUNTS_PER_INCH);
+            int latLeftTarget_f = stanga_f.getCurrentPosition() + (int) (lat * COUNTS_PER_INCH);
+            int latLeftTarget_s = stanga_s.getCurrentPosition() + (int) (lat * COUNTS_PER_INCH);
+            int latRightTarget_f = dreapta_f.getCurrentPosition() + (int) (lat * COUNTS_PER_INCH);
             int latRightTarget_s = dreapta_s.getCurrentPosition() + (int) (lat * COUNTS_PER_INCH);
 
-            stanga_f.setTargetPosition(newLeftTarget_f-latLeftTarget_f);
-            stanga_s.setTargetPosition(newLeftTarget_s+latLeftTarget_s);
-            dreapta_f.setTargetPosition(newRightTarget_f-latRightTarget_f);
-            dreapta_s.setTargetPosition(newRightTarget_s+latRightTarget_s);
+            stanga_f.setTargetPosition(newLeftTarget_f - latLeftTarget_f);
+            stanga_s.setTargetPosition(newLeftTarget_s + latLeftTarget_s);
+            dreapta_f.setTargetPosition(newRightTarget_f - latRightTarget_f);
+            dreapta_s.setTargetPosition(newRightTarget_s + latRightTarget_s);
             // Turn On RUN_TO_POSITION
             stanga_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             stanga_s.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -277,13 +278,13 @@ adsfasdfasdfas extends LinearOpMode {
 
 
             while (opModeIsActive() &&
-                   (runtime.seconds() < timeoutS) &&
-                   (stanga_f.isBusy() && stanga_s.isBusy() &&dreapta_f.isBusy() && dreapta_s.isBusy())) {
+                    (runtime.seconds() < timeoutS) &&
+                    (stanga_f.isBusy() && stanga_s.isBusy() && dreapta_f.isBusy() && dreapta_s.isBusy())) {
 
-                telemetry.addData("Path1",  "Running to %7d :%7d : %7d : %7d" , newLeftTarget_f,  newLeftTarget_s, newRightTarget_s, newRightTarget_f);
-                telemetry.addData("Path2",  "Running at %7d :%7d : %7d : %7d",
-                                            stanga_f.getCurrentPosition(),
-                                            stanga_s.getCurrentPosition(), dreapta_s.getCurrentPosition(), dreapta_f.getCurrentPosition());
+                telemetry.addData("Path1", "Running to %7d :%7d : %7d : %7d", newLeftTarget_f, newLeftTarget_s, newRightTarget_s, newRightTarget_f);
+                telemetry.addData("Path2", "Running at %7d :%7d : %7d : %7d",
+                        stanga_f.getCurrentPosition(),
+                        stanga_s.getCurrentPosition(), dreapta_s.getCurrentPosition(), dreapta_f.getCurrentPosition());
                 telemetry.update();
             }
 
@@ -313,10 +314,10 @@ adsfasdfasdfas extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget_f = stanga_f.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newLeftTarget_s = stanga_s.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget_f= dreapta_f.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
-            newRightTarget_s= dreapta_s.getCurrentPosition() + (int) (rightInches *COUNTS_PER_INCH);
+            newLeftTarget_f = stanga_f.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
+            newLeftTarget_s = stanga_s.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
+            newRightTarget_f = dreapta_f.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
+            newRightTarget_s = dreapta_s.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
             stanga_f.setTargetPosition(newLeftTarget_f);
             stanga_s.setTargetPosition(newLeftTarget_s);
             dreapta_f.setTargetPosition(newRightTarget_f);
@@ -338,10 +339,10 @@ adsfasdfasdfas extends LinearOpMode {
 
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
-                    (stanga_f.isBusy() && stanga_s.isBusy() &&dreapta_f.isBusy() && dreapta_s.isBusy())) {
+                    (stanga_f.isBusy() && stanga_s.isBusy() && dreapta_f.isBusy() && dreapta_s.isBusy())) {
 
-                telemetry.addData("Path1",  "Running to %7d :%7d : %7d : %7d" , newLeftTarget_f,  newLeftTarget_s, newRightTarget_s, newRightTarget_f);
-                telemetry.addData("Path2",  "Running at %7d :%7d : %7d : %7d",
+                telemetry.addData("Path1", "Running to %7d :%7d : %7d : %7d", newLeftTarget_f, newLeftTarget_s, newRightTarget_s, newRightTarget_f);
+                telemetry.addData("Path2", "Running at %7d :%7d : %7d : %7d",
                         stanga_f.getCurrentPosition(),
                         stanga_s.getCurrentPosition(), dreapta_s.getCurrentPosition(), dreapta_f.getCurrentPosition());
                 telemetry.update();
@@ -369,7 +370,7 @@ adsfasdfasdfas extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            movement_do = motor_cremaliera.getCurrentPosition() + (int)(movement * COUNTS_PER_INCH);
+            movement_do = motor_cremaliera.getCurrentPosition() + (int) (movement * COUNTS_PER_INCH);
 
 
             motor_cremaliera.setTargetPosition(movement_do);
@@ -383,12 +384,11 @@ adsfasdfasdfas extends LinearOpMode {
             motor_cremaliera.setPower(Math.abs(speed));
 
 
-
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
-                    (motor_cremaliera.isBusy() )) {
+                    (motor_cremaliera.isBusy())) {
 
-                telemetry.addData("Path1" , movement_do);
+                telemetry.addData("Path1", movement_do);
                 telemetry.addData("Path2", motor_cremaliera.getCurrentPosition());
             }
 
@@ -408,7 +408,7 @@ adsfasdfasdfas extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            movement_do = motor_brat.getCurrentPosition() + (int)(movement * COUNTS_PER_INCH);
+            movement_do = motor_brat.getCurrentPosition() + (int) (movement * COUNTS_PER_INCH);
 
 
             motor_brat.setTargetPosition(movement_do);
@@ -422,12 +422,11 @@ adsfasdfasdfas extends LinearOpMode {
             motor_brat.setPower(Math.abs(speed));
 
 
-
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
                     (motor_brat.isBusy())) {
 
-                telemetry.addData("Path1" , movement_do);
+                telemetry.addData("Path1", movement_do);
                 telemetry.addData("Path2", motor_cremaliera.getCurrentPosition());
             }
 
@@ -466,4 +465,6 @@ adsfasdfasdfas extends LinearOpMode {
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }
+
+
 }
