@@ -58,15 +58,14 @@ public class BasicOpMode_Linear extends LinearOpMode {
         private DcMotor stanga_s = null;
         private DcMotor dreapta_s = null;
         private DcMotor motor_brat = null;
-        private DcMotor motor_cremaliera = null;
+        private DcMotor motor_brat_colectare = null;
+        private DcMotor motor_brat_aruncare=null;
 
         private Servo servo_cleste = null;
         private Servo servo_gimbal_1 = null;
-        private Servo servo_gimbal_2 = null;
-        private Servo servo_cutie1 = null;
-        private Servo servo_cutie2 = null;
-
-        private DistanceSensor sensorRange;
+        //private Servo servo_gimbal_2 = null;
+        //private Servo servo_cutie1 = null;
+        //private Servo servo_cutie2 = null;
 
         double pozitie_servo1 = 0;
         double pozitie_servo2 = 0;
@@ -82,17 +81,16 @@ public class BasicOpMode_Linear extends LinearOpMode {
             dreapta_s = hardwareMap.get(DcMotor.class, "dreapta_s");
 
             motor_brat = hardwareMap.get(DcMotor.class, "motor_brat");
-            motor_cremaliera = hardwareMap.get(DcMotor.class, "motor_cremaliera");
+            motor_brat_colectare = hardwareMap.get(DcMotor.class, "motor_brat_colectare");
+            motor_brat_aruncare = hardwareMap.get(DcMotor.class,"motor_brat_aruncare");
 
             servo_cleste = hardwareMap.get(Servo.class, "servo_cleste");
             servo_gimbal_1 = hardwareMap.get(Servo.class, "servo_gimba1");
-            servo_gimbal_2 = hardwareMap.get(Servo.class, "servo_gimba2");
+            //servo_gimbal_2 = hardwareMap.get(Servo.class, "servo_gimba2");
 
-            servo_cutie1 = hardwareMap.get(Servo.class, "servo_cutie1");
-            servo_cutie2 = hardwareMap.get(Servo.class, "servo_cutie2");
+            //servo_cutie1 = hardwareMap.get(Servo.class, "servo_cutie1");
+            //servo_cutie2 = hardwareMap.get(Servo.class, "servo_cutie2");
 
-            sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_range");
-            sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_range");
             //setarile pentru motoare
             stanga_f.setDirection(DcMotor.Direction.FORWARD);
             stanga_s.setDirection(DcMotor.Direction.FORWARD);
@@ -103,12 +101,13 @@ public class BasicOpMode_Linear extends LinearOpMode {
             motor_brat.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
             motor_brat.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            motor_cremaliera.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            motor_brat_colectare.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            motor_brat_aruncare.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             double speedAjust = 7;
             waitForStart();
             runtime.reset();
 
-            servo_gimbal_2.setPosition(0);
+            //servo_gimbal_2.setPosition(0);
 
 
             while (opModeIsActive()) {
@@ -118,62 +117,44 @@ public class BasicOpMode_Linear extends LinearOpMode {
                 if (gamepad1.dpad_up == true) {
                     speedAjust += 1;
                 }
-                if (sensorRange.getDistance(DistanceUnit.CM) <= 7) {
-                    stanga_f.setPower(0);
-                    stanga_s.setPower(0);
-                    dreapta_f.setPower(0);
-                    dreapta_s.setPower(0);
-                } else {
-                //codul pentru mechanum
-                stanga_f.setPower((gamepad1.left_stick_y + gamepad1.right_stick_x + gamepad1.left_stick_x) * (+speedAjust / 10));
-                stanga_s.setPower((gamepad1.left_stick_y + gamepad1.right_stick_x - gamepad1.left_stick_x) * (+speedAjust / 10));
-                dreapta_f.setPower((gamepad1.left_stick_y - gamepad1.right_stick_x + gamepad1.left_stick_x) * (+speedAjust / 10));
-                dreapta_s.setPower((gamepad1.left_stick_y - gamepad1.right_stick_x - gamepad1.left_stick_x) * (+speedAjust / 10));
 
-                //codul pentru brat
-                motor_brat.setPower(gamepad2.left_stick_y * 0.5);
-                motor_cremaliera.setPower(gamepad2.left_trigger);
-                motor_cremaliera.setPower(-gamepad2.right_trigger);
+                        //codul pentru mechanum
+                        stanga_f.setPower((gamepad1.left_stick_y + gamepad1.right_stick_x + gamepad1.left_stick_x) * (+speedAjust / 10));
+                        stanga_s.setPower((gamepad1.left_stick_y + gamepad1.right_stick_x - gamepad1.left_stick_x) * (+speedAjust / 10));
+                        dreapta_f.setPower((gamepad1.left_stick_y - gamepad1.right_stick_x + gamepad1.left_stick_x) * (+speedAjust / 10));
+                        dreapta_s.setPower((gamepad1.left_stick_y - gamepad1.right_stick_x - gamepad1.left_stick_x) * (+speedAjust / 10));
 
-                if (gamepad2.x) {
-                    pozitie_servo1 = pozitie_servo1 + 0.01;
-                }
-                if (gamepad2.y) {
-                    pozitie_servo1 = pozitie_servo1 - 0.01;
-                }
-                if (gamepad2.left_bumper) {
-                    servo_cleste.setPosition(1);
-                }
-                if (gamepad2.right_bumper) {
-                    servo_cleste.setPosition(0);
-                }
-                if (gamepad2.dpad_down) {
-                    servo_cutie1.setPosition(1);
-                    servo_cutie2.setPosition(1);
-                }
-                if (gamepad2.dpad_up) {
+                        //codul pentru brat
+                        motor_brat.setPower(gamepad2.right_stick_y * 0.5);
+                        motor_brat_aruncare.setPower(gamepad2.left_stick_y);
+                       // motor_cremaliera.setPower(gamepad2.left_trigger);
+                       // motor_cremaliera.setPower(-gamepad2.right_trigger);
 
-                    servo_cutie1.setPosition(0);
-                    servo_cutie2.setPosition(0);
 
-                }
-                pozitie_servo1 = Range.clip(pozitie_servo1, 0, 1);
-                pozitie_servo2 = Range.clip(pozitie_servo2, 0, 1);
-                Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor) sensorRange;
-                telemetry.addData(">>", "Press start to continue");
-                telemetry.update();
-                servo_gimbal_2.setPosition(pozitie_servo2);
-                servo_gimbal_1.setPosition(pozitie_servo1);
-                telemetry.addData("speedAjust", speedAjust);
-                telemetry.addData("Valoare", gamepad2.right_stick_x);
-                telemetry.addData("Status", "Run Time: " + runtime.toString());
-                telemetry.addData("range", String.format("%.01f cm", sensorRange.getDistance(DistanceUnit.CM)));
+                        if (gamepad2.left_bumper) {
+                            motor_brat_colectare.setPower(1);
+                            //servo_cutie1.setPosition(1);
+                            //servo_cutie2.setPosition(1);
+                        }
+                        if (gamepad2.right_bumper) {
+                            motor_brat_colectare.setPower(0);
+                            //servo_cutie1.setPosition(0);
+                            //servo_cutie2.setPosition(0);
 
-                telemetry.addData("ID", String.format("%x", sensorTimeOfFlight.getModelID()));
-                telemetry.addData("did time out", Boolean.toString(sensorTimeOfFlight.didTimeoutOccur()));
+                        }
+                        pozitie_servo1 = Range.clip(pozitie_servo1, 0, 1);
+                        pozitie_servo2 = Range.clip(pozitie_servo2, 0, 1);
+                        telemetry.addData(">>", "Press start to continue");
+                        telemetry.update();
 
-                    telemetry.update();
+                        servo_gimbal_1.setPosition(pozitie_servo1);
+                        telemetry.addData("speedAjust", speedAjust);
+                        telemetry.addData("Valoare", gamepad2.right_stick_x);
+                        telemetry.addData("Status", "Run Time: " + runtime.toString());
+
+                        telemetry.update();
+
                 }
             }
         }
-    }
+
