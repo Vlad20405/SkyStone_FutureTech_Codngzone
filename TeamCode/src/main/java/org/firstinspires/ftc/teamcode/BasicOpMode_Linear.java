@@ -61,8 +61,8 @@ public class BasicOpMode_Linear extends LinearOpMode {
         private DcMotor motor_brat_colectare = null;
         private DcMotor motor_brat_aruncare=null;
 
-        private Servo servo_cleste = null;
-        private Servo servo_gimbal_1 = null;
+        //private Servo servo_cleste = null;
+        //private Servo servo_gimbal_1 = null;
         //private Servo servo_gimbal_2 = null;
         //private Servo servo_cutie1 = null;
         //private Servo servo_cutie2 = null;
@@ -84,8 +84,8 @@ public class BasicOpMode_Linear extends LinearOpMode {
             motor_brat_colectare = hardwareMap.get(DcMotor.class, "motor_brat_colectare");
             motor_brat_aruncare = hardwareMap.get(DcMotor.class,"motor_brat_aruncare");
 
-            servo_cleste = hardwareMap.get(Servo.class, "servo_cleste");
-            servo_gimbal_1 = hardwareMap.get(Servo.class, "servo_gimba1");
+            //servo_cleste = hardwareMap.get(Servo.class, "servo_cleste");
+            //servo_gimbal_1 = hardwareMap.get(Servo.class, "servo_gimba1");
             //servo_gimbal_2 = hardwareMap.get(Servo.class, "servo_gimba2");
 
             //servo_cutie1 = hardwareMap.get(Servo.class, "servo_cutie1");
@@ -147,7 +147,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
                         telemetry.addData(">>", "Press start to continue");
                         telemetry.update();
 
-                        servo_gimbal_1.setPosition(pozitie_servo1);
+                        //servo_gimbal_1.setPosition(pozitie_servo1);
                         telemetry.addData("speedAjust", speedAjust);
                         telemetry.addData("Valoare", gamepad2.right_stick_x);
                         telemetry.addData("Status", "Run Time: " + runtime.toString());
