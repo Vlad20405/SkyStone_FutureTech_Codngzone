@@ -49,7 +49,7 @@ import java.util.Locale;
  */
 @TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
 //@Disabled
-public class BasicOpMode_Linear extends LinearOpMode {
+public class BasicOpMode_Linear<servo_cleste> extends LinearOpMode {
 
         // Declaram variabilele
         private ElapsedTime runtime = new ElapsedTime();
@@ -61,12 +61,8 @@ public class BasicOpMode_Linear extends LinearOpMode {
         private DcMotor motor_brat_colectare = null;
         private DcMotor motor_brat_aruncare=null;
 
-        //private Servo servo_cleste = null;
-        //private Servo servo_gimbal_1 = null;
-        //private Servo servo_gimbal_2 = null;
-        //private Servo servo_cutie1 = null;
-        //private Servo servo_cutie2 = null;
-
+        private Servo servo_aruncare = null;
+        private Servo servo_cleste = null;
         double pozitie_servo1 = 0;
         double pozitie_servo2 = 0;
 
@@ -84,12 +80,8 @@ public class BasicOpMode_Linear extends LinearOpMode {
             motor_brat_colectare = hardwareMap.get(DcMotor.class, "motor_brat_colectare");
             motor_brat_aruncare = hardwareMap.get(DcMotor.class,"motor_brat_aruncare");
 
-            //servo_cleste = hardwareMap.get(Servo.class, "servo_cleste");
-            //servo_gimbal_1 = hardwareMap.get(Servo.class, "servo_gimba1");
-            //servo_gimbal_2 = hardwareMap.get(Servo.class, "servo_gimba2");
-
-            //servo_cutie1 = hardwareMap.get(Servo.class, "servo_cutie1");
-            //servo_cutie2 = hardwareMap.get(Servo.class, "servo_cutie2");
+            servo_aruncare = hardwareMap.get(Servo.class, "servo_aruncare");
+            servo_cleste = hardwareMap.get(Servo.class, "servo_cleste");
 
             //setarile pentru motoare
             stanga_f.setDirection(DcMotor.Direction.FORWARD);
@@ -127,20 +119,25 @@ public class BasicOpMode_Linear extends LinearOpMode {
                         //codul pentru brat
                         motor_brat.setPower(gamepad2.right_stick_y * 0.5);
                         motor_brat_aruncare.setPower(gamepad2.left_stick_y);
-                       // motor_cremaliera.setPower(gamepad2.left_trigger);
-                       // motor_cremaliera.setPower(-gamepad2.right_trigger);
 
-
+                        if(gamepad2.a) {
+                            servo_aruncare.setPosition(1);
+                        }
+                        if(gamepad2.b){
+                            servo_aruncare.setPosition(0);
+                        }
                         if (gamepad2.left_bumper) {
                             motor_brat_colectare.setPower(1);
-                            //servo_cutie1.setPosition(1);
-                            //servo_cutie2.setPosition(1);
                         }
                         if (gamepad2.right_bumper) {
                             motor_brat_colectare.setPower(0);
-                            //servo_cutie1.setPosition(0);
-                            //servo_cutie2.setPosition(0);
 
+                        }
+                        if(gamepad2.y){
+                            servo_cleste.setPosition(1);
+                        }
+                        if(gamepad2.x){
+                            servo_cleste.setPosition(0);
                         }
                         pozitie_servo1 = Range.clip(pozitie_servo1, 0, 1);
                         pozitie_servo2 = Range.clip(pozitie_servo2, 0, 1);
