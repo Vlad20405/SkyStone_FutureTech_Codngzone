@@ -117,8 +117,12 @@ public class BasicOpMode_Linear<servo_cleste> extends LinearOpMode {
                         dreapta_s.setPower((gamepad1.left_stick_y - gamepad1.right_stick_x - gamepad1.left_stick_x) * (+speedAjust / 10));
 
                         //codul pentru brat
-                        motor_brat.setPower(gamepad2.right_stick_y * 0.5);
-                        motor_brat_aruncare.setPower(gamepad2.left_stick_y);
+                        motor_brat.setPower(gamepad2.left_stick_y);
+                        if(gamepad2.dpad_up)
+                            motor_brat_aruncare.setPower(1);
+                        if(gamepad2.dpad_down)
+                            motor_brat_aruncare.setPower(0);
+
 
                         if(gamepad2.a) {
                             servo_aruncare.setPosition(1);

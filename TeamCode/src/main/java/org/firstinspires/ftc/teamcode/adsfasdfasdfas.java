@@ -84,7 +84,7 @@ adsfasdfasdfas extends LinearOpMode {
     /* Declare OpMode members. */
 
 
-    private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
+   /* private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Stone";
     private static final String LABEL_SECOND_ELEMENT = "Skystone";
 
@@ -92,7 +92,7 @@ adsfasdfasdfas extends LinearOpMode {
             "AStJnD3/////AAABmSbeJsgIn0i0lCVUWxTrdiJtlmoJSTgwubOWegTxmEdsFzJkBuin+7gNMqUApOj8XkwLsbgKdDM2VsiC5ttIAUxBasPjSgQ5NLOLbkEX8E5hSWmmO73F3SBXRKP43WSNSCYDNRQdC3ZuGaVNn/3Xt3K5P82/890LHtbxK1NJc+R8bGZEH2bCAly6e1xYGkTbfaGSHkvnIxtQQl3XstJL9Q96D9MSZEcbSjr8JYB5NsoOujufJRkxsIhtmpshfxzyHNs9Xo+4QlQL2AHj/F0NCYMfqOTk19C12o8jJ2YeQkHEib2OBHmVKMi+V/ptEAEeRTmkEHBNNew8j5sd0gNLJmTo/CXFy3f/Fp0ZBgM21dy2";
 
     private VuforiaLocalizer vuforia;
-    private TFObjectDetector tfod;
+    private TFObjectDetector tfod;*/
 
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -106,18 +106,15 @@ adsfasdfasdfas extends LinearOpMode {
     static final double TURN_SPEED = 0.5;
 
     private DcMotor stanga_f = null;
-    private DcMotor stanga_s = null;
     private DcMotor dreapta_f = null;
+    private DcMotor stanga_s = null;
     private DcMotor dreapta_s = null;
-
     private DcMotor motor_brat = null;
-    private DcMotor motor_cremaliera = null;
+    private DcMotor motor_brat_colectare = null;
+    private DcMotor motor_brat_aruncare=null;
 
+    private Servo servo_aruncare = null;
     private Servo servo_cleste = null;
-    private Servo servo_gimbal_1 = null;
-    private Servo servo_gimbal_2 = null;
-    private Servo servo_cutie1 = null;
-    private Servo servo_cutie2 = null;
 
     private DistanceSensor sensorRange;
 
@@ -126,7 +123,7 @@ adsfasdfasdfas extends LinearOpMode {
     public void runOpMode() {
 
 
-        telemetry.addData("Status", "Resetting Encoders");    //
+        telemetry.addData("Status", "Resetting Encoders");
         telemetry.update();
 
         stanga_f = hardwareMap.get(DcMotor.class, "stanga_f");
@@ -135,14 +132,12 @@ adsfasdfasdfas extends LinearOpMode {
         dreapta_s = hardwareMap.get(DcMotor.class, "dreapta_s");
 
         motor_brat = hardwareMap.get(DcMotor.class, "motor_brat");
-        motor_cremaliera = hardwareMap.get(DcMotor.class, "motor_cremaliera");
+        motor_brat_aruncare = hardwareMap.get(DcMotor.class, "motor_brat_aruncare");
+        motor_brat_colectare = hardwareMap.get(DcMotor.class, "motor_brat_colectare");
 
         servo_cleste = hardwareMap.get(Servo.class, "servo_cleste");
-        servo_gimbal_1 = hardwareMap.get(Servo.class, "servo_gimba1");
-        servo_gimbal_2 = hardwareMap.get(Servo.class, "servo_gimba2");
 
-        servo_cutie1 = hardwareMap.get(Servo.class, "servo_cutie1");
-        servo_cutie2 = hardwareMap.get(Servo.class, "servo_cutie2");
+        servo_aruncare = hardwareMap.get(Servo.class, "servo_aruncare");
 
         stanga_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         stanga_s.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -164,8 +159,8 @@ adsfasdfasdfas extends LinearOpMode {
         dreapta_f.setDirection(DcMotor.Direction.REVERSE);
         dreapta_s.setDirection(DcMotor.Direction.REVERSE);
 
-
-        motor_cremaliera.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motor_brat_aruncare.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motor_brat_colectare.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor_brat.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         telemetry.addData("Path0", "Starting at %7d :%7d",
@@ -173,11 +168,13 @@ adsfasdfasdfas extends LinearOpMode {
                 stanga_s.getCurrentPosition());
         telemetry.update();
 
-        initVuforia();
+        //initVuforia();
 
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
             initTfod();
-        } else {
+        }
+        else
+            {
             telemetry.addData("Sorry!", "This device is not compatible with TFOD");
         }
 
@@ -185,9 +182,9 @@ adsfasdfasdfas extends LinearOpMode {
          * Activate TensorFlow Object Detection before we wait for the start command.
          * Do it here so that the Camera Stream window will have the TensorFlow annotations visible.
          **/
-        if (tfod != null) {
-            tfod.activate();
-        }
+       // if (tfod != null) {
+           // tfod.activate();
+        //}
 
         /** Wait for the game to begin */
         telemetry.addData(">", "Press Play to start op mode");
@@ -197,45 +194,43 @@ adsfasdfasdfas extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        int i;
-        i = 1;
-        motor_brat.setPower(1);
-        while (i != 200000) {
-            i++;
+        //int i;
+        //i = 1;
+       // motor_brat.setPower(1);
+       // while (i != 200000) {
+         //   i++;
 
-        }
-        motor_brat.setPower(0);
-        i = 2;
-        if (i == 2) {
-            motor_brat.setPower(0);
-            i++;
-        }
-        if (i == 3) {
-            encoderDrive(1, -2, 2, 1);
-            straif(1, -60, 0, 6);
-            encoderDrive(1, 2, -2, 1);
-            straif(1, -30, 0, 3);
+       // }
+       // motor_brat.setPower(0);
+       // i = 2;
+       // if (i == 2) {
+           // motor_brat.setPower(0);
+         //   i++;
+       // }
+     //   if (i == 3) {
+            servo_cleste.setPosition(1);
+            //motor_brat.setPower(-0.5);
+            straif(1, -10, 0, 1.5);
+            encoderDrive(1, 2, -2, 0.75);
+            straif(1, 5, 0, 1);
+            //i=1;
+            //if(i==1) {
+               // servo_cleste.setPosition(0);
 
+                //straif(0, 0, 0, 2);
+                //straif(1, 30, 0, 3);
 
-            servo_cutie1.setPosition(1);
-            servo_cutie2.setPosition(1);
-
-            straif(0, 0, 0, 2);
-            straif(1, 30, 0, 3);
-
-            servo_cutie1.setPosition(0);
-            servo_cutie2.setPosition(0);
-
-            straif(1, 0, 5, 2);
-            straif(1, -4, 0, 2);
-            encoderDrive(1, 2, -2, 1);
-            straif(1, -7, 0, 2);
-        }
+                //straif(1, 0, 5, 2);
+                //straif(1, -4, 0, 2);
+                //encoderDrive(1, 2, -2, 1);
+                //straif(1, -7, 0, 2);
+                //}
 
 
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
-    }
+                telemetry.addData("Path", "Complete");
+                telemetry.update();
+            }
+
 
     public void straif(double speed,
                        double forwardMovement, double lat,
@@ -362,7 +357,7 @@ adsfasdfasdfas extends LinearOpMode {
         }
     }
 
-    public void cremaliera(double speed, double movement, double timeoutS) {
+    public void setMotor_brat_colectare(double speed, double movement, double timeoutS) {
         int movement_do;
 
 
@@ -370,32 +365,70 @@ adsfasdfasdfas extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            movement_do = motor_cremaliera.getCurrentPosition() + (int) (movement * COUNTS_PER_INCH);
+            movement_do = motor_brat_colectare.getCurrentPosition() + (int) (movement * COUNTS_PER_INCH);
 
 
-            motor_cremaliera.setTargetPosition(movement_do);
+            motor_brat_colectare.setTargetPosition(movement_do);
 
 
             // Turn On RUN_TO_POSITION
-            motor_cremaliera.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motor_brat_colectare.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
             runtime.reset();
-            motor_cremaliera.setPower(Math.abs(speed));
+            motor_brat_colectare.setPower(Math.abs(speed));
 
 
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
-                    (motor_cremaliera.isBusy())) {
+                    (motor_brat_colectare.isBusy())) {
 
                 telemetry.addData("Path1", movement_do);
-                telemetry.addData("Path2", motor_cremaliera.getCurrentPosition());
+                telemetry.addData("Path2", motor_brat_colectare.getCurrentPosition());
             }
 
             // Stop all motion;
-            motor_cremaliera.setPower(0);
+            motor_brat_colectare.setPower(0);
 
-            motor_cremaliera.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motor_brat_colectare.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        }
+    }
+
+    public void setMotor_brat_aruncare(double speed, double movement, double timeoutS) {
+        int movement_do;
+
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            movement_do = motor_brat_aruncare.getCurrentPosition() + (int) (movement * COUNTS_PER_INCH);
+
+
+            motor_brat_aruncare.setTargetPosition(movement_do);
+
+
+            // Turn On RUN_TO_POSITION
+            motor_brat_aruncare.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+            runtime.reset();
+            motor_brat_aruncare.setPower(Math.abs(speed));
+
+
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (motor_brat_aruncare.isBusy())) {
+
+                telemetry.addData("Path1", movement_do);
+                telemetry.addData("Path2", motor_brat_aruncare.getCurrentPosition());
+            }
+
+            // Stop all motion;
+            motor_brat_aruncare.setPower(0);
+
+            motor_brat_aruncare.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         }
     }
@@ -427,7 +460,7 @@ adsfasdfasdfas extends LinearOpMode {
                     (motor_brat.isBusy())) {
 
                 telemetry.addData("Path1", movement_do);
-                telemetry.addData("Path2", motor_cremaliera.getCurrentPosition());
+                //telemetry.addData("Path2", motor_cremaliera.getCurrentPosition());
             }
 
             // Stop all motion;
@@ -439,21 +472,22 @@ adsfasdfasdfas extends LinearOpMode {
     }
 
 
-    private void initVuforia() {
-        /*
+  /*  private void initVuforia() {
+
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
-         */
+
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
 
         //  Instantiate the Vuforia engine
-        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+       // vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
         // Loading trackables is not necessary for the TensorFlow Object Detection engine.
     }
 
+*/
     /**
      * Initialize the TensorFlow Object Detection engine.
      */
@@ -462,8 +496,8 @@ adsfasdfasdfas extends LinearOpMode {
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfodParameters.minimumConfidence = 0.8;
-        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
+       // tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+       // tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }
 
 
