@@ -194,8 +194,8 @@ adsfasdfasdfas extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        //int i;
-        //i = 1;
+        int i;
+        i = 1;
        // motor_brat.setPower(1);
        // while (i != 200000) {
          //   i++;
@@ -209,23 +209,33 @@ adsfasdfasdfas extends LinearOpMode {
        // }
      //   if (i == 3) {
             servo_cleste.setPosition(1);
-            //motor_brat.setPower(-0.5);
-            straif(1, -10, 0, 1.5);
-            encoderDrive(1, 2, -2, 0.75);
-            straif(1, 5, 0, 1);
-            //i=1;
-            //if(i==1) {
-               // servo_cleste.setPosition(0);
 
-                //straif(0, 0, 0, 2);
-                //straif(1, 30, 0, 3);
+            straif(1, -15, 0, 2);
+            encoderDrive(0.5, 2, -2, 0.75);
 
-                //straif(1, 0, 5, 2);
-                //straif(1, -4, 0, 2);
-                //encoderDrive(1, 2, -2, 1);
-                //straif(1, -7, 0, 2);
-                //}
-
+            straif(1, 2, 0, 0.60);
+            servo_cleste.setPosition(0);
+            straif(1,-1,0,0.30);
+            straif(0.5 ,0 ,10,4 );
+            encoderDrive(0.5, -2, 2, 0.75);
+            straif(1,0,-2.5,0.55);
+           /* motor_brat.setPower(-0.3);
+            while(i!=200) {
+                 i++;
+            }
+            i=1;
+            straif(1,1,0,0.40);
+            servo_cleste.setPosition(1);
+            if (i==200)
+            {
+                straif(0,0,0,0);
+                i++;
+            }
+            straif(1,-10,0,1);
+            encoderDrive(1, 2, -2, 0.55);
+            servo_cleste.setPosition(0);
+            straif(1,2,0,0.60);
+*/
 
                 telemetry.addData("Path", "Complete");
                 telemetry.update();
