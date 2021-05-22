@@ -198,43 +198,33 @@ adsfasdfasdfas extends LinearOpMode {
         i = 1;
        // motor_brat.setPower(1);
        // while (i != 200000) {
-         //   i++;
-
-       // }
-       // motor_brat.setPower(0);
-       // i = 2;
-       // if (i == 2) {
-           // motor_brat.setPower(0);
-         //   i++;
-       // }
-     //   if (i == 3) {
             servo_cleste.setPosition(1);
 
             straif(1, -15, 0, 2);
             encoderDrive(0.5, 2, -2, 0.75);
 
-            straif(1, 2, 0, 0.60);
+            straif(1, 2, 0, 0.65);
             servo_cleste.setPosition(0);
-            straif(1,-1,0,0.30);
-            straif(0.5 ,0 ,10,4 );
+            straif(1,-1,0,0.40);
+            straif(0.5 ,0 ,5,1 );
             encoderDrive(0.5, -2, 2, 0.75);
-            straif(1,0,-2.5,0.55);
-           /* motor_brat.setPower(-0.3);
+           // straif(1,0,-2,0.40);
+
+          /*  motor_brat.setPower(-0.7);
             while(i!=200) {
                  i++;
             }
             i=1;
-            straif(1,1,0,0.40);
-            servo_cleste.setPosition(1);
-            if (i==200)
+             servo_cleste.setPosition(1);
+             straif(0.50,1,0,0.40);
+            while(i!=400)
             {
-                straif(0,0,0,0);
                 i++;
             }
-            straif(1,-10,0,1);
+            straif(1,-10,0,0.40);
             encoderDrive(1, 2, -2, 0.55);
             servo_cleste.setPosition(0);
-            straif(1,2,0,0.60);
+            straif(1,2,0,0.70);
 */
 
                 telemetry.addData("Path", "Complete");
@@ -242,9 +232,7 @@ adsfasdfasdfas extends LinearOpMode {
             }
 
 
-    public void straif(double speed,
-                       double forwardMovement, double lat,
-                       double timeoutS) {
+    public void straif(double speed, double forwardMovement, double lat,double timeoutS) {
         int newLeftTarget_f;
         int newLeftTarget_s;
         int newRightTarget_f;

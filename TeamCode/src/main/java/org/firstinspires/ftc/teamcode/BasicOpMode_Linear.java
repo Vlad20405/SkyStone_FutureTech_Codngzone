@@ -49,7 +49,7 @@ import java.util.Locale;
  */
 @TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
 //@Disabled
-public class BasicOpMode_Linear<servo_cleste> extends LinearOpMode {
+public class BasicOpMode_Linear extends LinearOpMode {
 
         // Declaram variabilele
         private ElapsedTime runtime = new ElapsedTime();
@@ -70,6 +70,7 @@ public class BasicOpMode_Linear<servo_cleste> extends LinearOpMode {
         public void runOpMode() {
             telemetry.addData("Status", "Initialized");
             telemetry.update();
+
             //sincronizam variabilele cu ce avem in configuratie
             stanga_f = hardwareMap.get(DcMotor.class, "stanga_f");
             dreapta_f = hardwareMap.get(DcMotor.class, "dreapta_f");
@@ -118,10 +119,10 @@ public class BasicOpMode_Linear<servo_cleste> extends LinearOpMode {
 
                         //codul pentru brat
                         motor_brat.setPower(gamepad2.left_stick_y);
-                        if(gamepad2.dpad_up)
-                            motor_brat_aruncare.setPower(1);
-                        if(gamepad2.dpad_down)
-                            motor_brat_aruncare.setPower(0);
+
+                            motor_brat_aruncare.setPower(gamepad2.right_stick_y);
+                        //if(gamepad2.dpad_down)
+                          //  motor_brat_aruncare.setPower(0);
 
 
                         if(gamepad2.a) {
