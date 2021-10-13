@@ -48,7 +48,7 @@ import java.util.Locale;
     Codul pentru controlat robotul in TeleOp
  */
 @TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
-//@Disabled
+@Disabled
 public class BasicOpMode_Linear extends LinearOpMode {
 
         // Declaram variabilele
@@ -72,7 +72,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
             telemetry.update();
 
             //sincronizam variabilele cu ce avem in configuratie
-            stanga_f = hardwareMap.get(DcMotor.class, "stanga_f");
+            stanga_f= hardwareMap .get(DcMotor.class ,"stanga_f") ;
             dreapta_f = hardwareMap.get(DcMotor.class, "dreapta_f");
             stanga_s = hardwareMap.get(DcMotor.class, "stanga_s");
             dreapta_s = hardwareMap.get(DcMotor.class, "dreapta_s");
@@ -118,18 +118,18 @@ public class BasicOpMode_Linear extends LinearOpMode {
                         dreapta_s.setPower((gamepad1.left_stick_y - gamepad1.right_stick_x - gamepad1.left_stick_x) * (+speedAjust / 10));
 
                         //codul pentru brat
-                        motor_brat.setPower(gamepad2.left_stick_y);
+                        //motor_brat.setPower(gamepad2.left_stick_y);
 
-                            motor_brat_aruncare.setPower(gamepad2.right_stick_y);
-                        //if(gamepad2.dpad_down)
-                          //  motor_brat_aruncare.setPower(0);
+                            //motor_brat_aruncare.setPower(gamepad2.right_stick_y);
+                       // if(gamepad2.dpad_down)
+                           // motor_brat_aruncare.setPower(0);
 
 
-                        if(gamepad2.a) {
-                            servo_aruncare.setPosition(1);
+                        if(gamepad2.dpad_up) {
+                            motor_brat_aruncare.setPower(1);
                         }
-                        if(gamepad2.b){
-                            servo_aruncare.setPosition(0);
+                        if(gamepad2.dpad_down){
+                            motor_brat_aruncare.setPower(0);
                         }
                         if (gamepad2.left_bumper) {
                             motor_brat_colectare.setPower(1);
