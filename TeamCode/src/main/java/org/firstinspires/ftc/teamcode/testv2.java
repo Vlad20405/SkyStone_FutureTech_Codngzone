@@ -33,9 +33,19 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 /*
     Codul pentru controlat robotul in TeleOp
@@ -51,12 +61,15 @@ public class testv2 extends LinearOpMode {
     private DcMotor Dreapta_S = null;
     private DcMotor Stanga_F = null;
     private DcMotor Stanga_S = null;
-
+    private DistanceSensor sensorRange;
 
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+        //Senzor Distanta Cod:
+        sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_range");
+        Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
 
         //sincronizam variabilele cu ce avem in configuratie
 
@@ -65,21 +78,34 @@ public class testv2 extends LinearOpMode {
         Stanga_F= hardwareMap.get(DcMotor.class,"Stanga_F");
         Stanga_S= hardwareMap.get(DcMotor.class,"Stanga_S");
 
+
         Stanga_F.setDirection(DcMotor.Direction.FORWARD);
         Stanga_S.setDirection(DcMotor.Direction.FORWARD);
         Dreapta_F.setDirection(DcMotor.Direction.REVERSE);
-        Dreapta_S.setDirection(DcMotor.Direction.FORWARD);
+        Dreapta_S.setDirection(DcMotor.Direction.REVERSE);
+        //Variabile Senzor Distanta:
+        telemetry.addData(">>", "Press start to continue");
+        telemetry.update();
 
         waitForStart();
         runtime.reset();
 
         while (opModeIsActive()) {
 
-
+            //Cod_Miscare_RotiMechanum:
             Stanga_F.setPower(gamepad1.left_stick_y + gamepad1.right_stick_x + gamepad1.left_stick_x);
             Stanga_S.setPower(gamepad1.left_stick_y + gamepad1.right_stick_x - gamepad1.left_stick_x) ;
             Dreapta_F.setPower(gamepad1.left_stick_y - gamepad1.right_stick_x + gamepad1.left_stick_x) ;
             Dreapta_S.setPower(gamepad1.left_stick_y - gamepad1.right_stick_x - gamepad1.left_stick_x);
+
+            //Cod_Senzor_Distanta:
+            telemetry.addData("deviceName",sensorRange.getDeviceName() );
+            telemetry.addData("range", String.format("%.01f cm", sensorRange.getDistance(DistanceUnit.CM)));
+
+            telemetry.addData("ID", String.format("%x", sensorTimeOfFlight.getModelID()));
+            telemetry.addData("did time out", Boolean.toString(sensorTimeOfFlight.didTimeoutOccur()));
+
+            telemetry.update();
 
 
 
@@ -88,8 +114,6 @@ public class testv2 extends LinearOpMode {
 
             telemetry.addData(">>", "Press start to continue");
             telemetry.update();
-
-            //servo_gimbal_1.setPosition(pozitie_servo1);
 
             telemetry.addData("Valoare", gamepad2.right_stick_x);
 
