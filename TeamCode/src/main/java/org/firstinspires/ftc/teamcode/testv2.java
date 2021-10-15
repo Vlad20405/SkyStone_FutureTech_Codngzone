@@ -29,11 +29,17 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.app.Activity;
+import android.graphics.Color;
+import android.view.View;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -42,6 +48,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
+import com.qualcomm.robotcore.hardware.SwitchableLight;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -56,12 +64,16 @@ public class testv2 extends LinearOpMode {
 
     // Declaram variabilele
     private ElapsedTime runtime = new ElapsedTime();
-
+    //Motoare sasiu:
     private DcMotor Dreapta_F = null;
     private DcMotor Dreapta_S = null;
     private DcMotor Stanga_F = null;
     private DcMotor Stanga_S = null;
+    //Senzor distanta:
     private DistanceSensor sensorRange;
+    //Senzor culoare:
+    ColorSensor sensorColor;
+
 
     @Override
     public void runOpMode() {
@@ -70,6 +82,8 @@ public class testv2 extends LinearOpMode {
         //Senzor Distanta Cod:
         sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_range");
         Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
+        //Senzor culoare cod:
+
 
         //sincronizam variabilele cu ce avem in configuratie
 
@@ -86,6 +100,18 @@ public class testv2 extends LinearOpMode {
         //Variabile Senzor Distanta:
         telemetry.addData(">>", "Press start to continue");
         telemetry.update();
+        //Variabile senzor culoare:
+        sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color");
+
+        float hsvValues[] = {0F, 0F, 0F};
+
+        final float values[] = hsvValues;
+
+        final double SCALE_FACTOR = 255;
+
+        int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
+        final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
+
 
         waitForStart();
         runtime.reset();
@@ -107,20 +133,48 @@ public class testv2 extends LinearOpMode {
 
             telemetry.update();
 
+            //Senzor Culoare:
+            Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
+                    (int) (sensorColor.green() * SCALE_FACTOR),
+                    (int) (sensorColor.blue() * SCALE_FACTOR),
+                    hsvValues);
 
+            telemetry.addData("Alpha", sensorColor.alpha());
+            telemetry.addData("Red  ", sensorColor.red());
+            telemetry.addData("Green", sensorColor.green());
+            telemetry.addData("Blue ", sensorColor.blue());
+            telemetry.addData("Hue", hsvValues[0]);
 
-            waitForStart();
+            relativeLayout.post(new Runnable() {
+                public void run() {
+                    relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
+                }
+            });
 
-
-            telemetry.addData(">>", "Press start to continue");
             telemetry.update();
-
-            telemetry.addData("Valoare", gamepad2.right_stick_x);
-
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.update();
-
         }
-    }
 
-}
+        relativeLayout.post(new Runnable() {
+            public void run() {
+                relativeLayout.setBackgroundColor(Color.WHITE);
+            }
+        });
+
+
+
+                    waitForStart();
+
+
+                    telemetry.addData(">>", "Press start to continue");
+                    telemetry.update();
+
+                    telemetry.addData("Valoare", gamepad2.right_stick_x);
+
+                    telemetry.addData("Status", "Run Time: " + runtime.toString());
+                    telemetry.update();
+
+
+
+
+            }
+        }
