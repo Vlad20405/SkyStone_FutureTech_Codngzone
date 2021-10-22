@@ -58,21 +58,27 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 /*
     Codul pentru controlat robotul in TeleOp
  */
-@TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
+@TeleOp(name="Basic: Linear OpMode", group="test")
 //@Disabled
 public class testv2 extends LinearOpMode {
 
     // Declaram variabilele
     private ElapsedTime runtime = new ElapsedTime();
+
     //Motoare sasiu:
     private DcMotor Dreapta_F = null;
     private DcMotor Dreapta_S = null;
     private DcMotor Stanga_F = null;
     private DcMotor Stanga_S = null;
+
+    //Motoare brat:
+    private DcMotor Brat_M =null;
+
     //Senzor distanta:
-    private DistanceSensor sensorRange;
+    //private DistanceSensor sensorRange;
+
     //Senzor culoare:
-    ColorSensor sensorColor;
+    //private ColorSensor sensorColor;
 
 
     @Override
@@ -80,12 +86,10 @@ public class testv2 extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         //Senzor Distanta Cod:
-        sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_range");
-        Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
-        //Senzor culoare cod:
+      //  sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_range");
+        //Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
 
-
-        //sincronizam variabilele cu ce avem in configuratie
+        //cod sasiu:
 
         Dreapta_F= hardwareMap.get(DcMotor.class,"Dreapta_F");
         Dreapta_S= hardwareMap.get(DcMotor.class,"Dreapta_S");
@@ -97,11 +101,16 @@ public class testv2 extends LinearOpMode {
         Stanga_S.setDirection(DcMotor.Direction.FORWARD);
         Dreapta_F.setDirection(DcMotor.Direction.REVERSE);
         Dreapta_S.setDirection(DcMotor.Direction.REVERSE);
+
+        //cod brat:
+        Brat_M= hardwareMap.get(DcMotor.class, "Brat_M");
+
         //Variabile Senzor Distanta:
-        telemetry.addData(">>", "Press start to continue");
-        telemetry.update();
+        //telemetry.addData(">>", "Press start to continue");
+        //telemetry.update();
+
         //Variabile senzor culoare:
-        sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color");
+        //sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color");
 
         float hsvValues[] = {0F, 0F, 0F};
 
@@ -124,25 +133,28 @@ public class testv2 extends LinearOpMode {
             Dreapta_F.setPower(gamepad1.left_stick_y - gamepad1.right_stick_x + gamepad1.left_stick_x) ;
             Dreapta_S.setPower(gamepad1.left_stick_y - gamepad1.right_stick_x - gamepad1.left_stick_x);
 
-            //Cod_Senzor_Distanta:
-            telemetry.addData("deviceName",sensorRange.getDeviceName() );
-            telemetry.addData("range", String.format("%.01f cm", sensorRange.getDistance(DistanceUnit.CM)));
+            //cod brat:
+            Brat_M.setPower(gamepad2.left_stick_y);
 
-            telemetry.addData("ID", String.format("%x", sensorTimeOfFlight.getModelID()));
-            telemetry.addData("did time out", Boolean.toString(sensorTimeOfFlight.didTimeoutOccur()));
+            //Cod_Senzor_Distanta:
+          //  telemetry.addData("deviceName",sensorRange.getDeviceName() );
+          //    telemetry.addData("range", String.format("%.01f cm", sensorRange.getDistance(DistanceUnit.CM)));
+
+          //  telemetry.addData("ID", String.format("%x", sensorTimeOfFlight.getModelID()));
+          //  telemetry.addData("did time out", Boolean.toString(sensorTimeOfFlight.didTimeoutOccur()));
 
             telemetry.update();
 
             //Senzor Culoare:
-            Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
-                    (int) (sensorColor.green() * SCALE_FACTOR),
-                    (int) (sensorColor.blue() * SCALE_FACTOR),
-                    hsvValues);
+          //  Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
+            //        (int) (sensorColor.green() * SCALE_FACTOR),
+              //      (int) (sensorColor.blue() * SCALE_FACTOR),
+                 //   hsvValues);
 
-            telemetry.addData("Alpha", sensorColor.alpha());
-            telemetry.addData("Red  ", sensorColor.red());
-            telemetry.addData("Green", sensorColor.green());
-            telemetry.addData("Blue ", sensorColor.blue());
+        //    telemetry.addData("Alpha", sensorColor.alpha());
+        //    telemetry.addData("Red  ", sensorColor.red());
+        //    telemetry.addData("Green", sensorColor.green());
+        //    telemetry.addData("Blue ", sensorColor.blue());
             telemetry.addData("Hue", hsvValues[0]);
 
             relativeLayout.post(new Runnable() {
