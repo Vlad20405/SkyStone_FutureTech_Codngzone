@@ -59,7 +59,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
     Codul pentru controlat robotul in TeleOp
  */
 @TeleOp(name="Basic: Linear OpMode", group="test")
-//@Disabled
+@Disabled
 public class testv2 extends LinearOpMode {
 
     // Declaram variabilele
