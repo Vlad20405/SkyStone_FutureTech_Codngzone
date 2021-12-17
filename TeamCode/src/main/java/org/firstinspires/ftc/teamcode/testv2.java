@@ -63,6 +63,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 //@Disabled
 public class testv2 extends LinearOpMode {
 
+    static final double INCREMENT   = 0.01;
+    static final int    CYCLE_MS    =   50;
+    static final double MAX_POS     =  1.0;
+    static final double MIN_POS     =  0.0;
+
     // Declaram variabilele
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -74,12 +79,24 @@ public class testv2 extends LinearOpMode {
 
     //Motoare brat:
     private DcMotor Brat_M =null;
+    private DcMotor Cutie=null;
+    private DcMotor Carusel=null;
+    //Servo-uri:
+    //private Servo Prindere=null;
 
+    Servo   Prindere;
+    double  position = (MAX_POS - MIN_POS) / 2;
+    boolean rampUp = true;
+
+
+    double pozitie_servo1 = 0;
+    double pozitie_servo2 = 0;
     //Senzor distanta:
+
     //private DistanceSensor sensorRange;
 
     //Senzor culoare:
-    private ColorSensor sensorColor;
+  //  private ColorSensor sensorColor;
 
     @Override
     public void runOpMode() {
@@ -105,7 +122,11 @@ public class testv2 extends LinearOpMode {
 
         //cod brat:
         Brat_M= hardwareMap.get(DcMotorImplEx.class, "Brat_M");
+        Cutie= hardwareMap.get(DcMotor.class,"Cutie");
+        Carusel= hardwareMap.get(DcMotor.class,"Carusel");
 
+        //cod servo:
+        Prindere= hardwareMap.get(Servo.class,"Prindere");
         waitForStart();
 
 
@@ -114,7 +135,7 @@ public class testv2 extends LinearOpMode {
         //telemetry.update();
 
         //Variabile senzor culoare:
-        sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color");
+  /*      sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color");
 
         float hsvValues[] = {0F, 0F, 0F};
 
@@ -124,7 +145,10 @@ public class testv2 extends LinearOpMode {
 
         int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
         final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
-
+*/
+        telemetry.addData(">", "Press Start to begin" );
+        telemetry.update();
+        waitForStart();
         waitForStart();
         runtime.reset();
 
@@ -138,16 +162,48 @@ public class testv2 extends LinearOpMode {
 
             //cod brat:
             Brat_M.setPower(gamepad2.left_stick_y);
+            Cutie.setPower(gamepad2.right_stick_y*0.2);
+
+            //cod servo:
+                if (rampUp) {
+                    // Keep stepping up until we hit the max value.
+                    position += INCREMENT;
+                    if (position >= MAX_POS) {
+                        position = MAX_POS;
+                        rampUp = !rampUp;   // Switch ramp direction
+                    }
+                }
+                else
+                    {
+                    // Keep stepping down until we hit the min value.
+                    position -= INCREMENT;
+                    if (position <= MIN_POS) {
+                        position = MIN_POS;
+                        rampUp = !rampUp;  // Switch ramp direction
+                    }
+                }
+            if(gamepad2.x) {
+            Prindere.setPosition(position);
+            sleep(CYCLE_MS);
+            idle();
+            }
+
+            //cod motor masa:
+
+            if(gamepad2.a)
+                Carusel.setPower(1);
+            if(gamepad2.b)
+                Carusel.setPower(0);
 
             //Codare cu senzor culoare:
 
-            sensorColor.red( );
-                    {
-                    Stanga_S.setPower(0);
-                    Stanga_F.setPower(0);
-                    Dreapta_F.setPower(0);
-                    Dreapta_S.setPower(0);
-                    }
+            //sensorColor.red( );
+              //      {
+              //      Stanga_S.setPower(0);
+              //      Stanga_F.setPower(0);
+              //      Dreapta_F.setPower(0);
+              //      Dreapta_S.setPower(0);
+               //     }
             //Cod_Senzor_Distanta:
             //  telemetry.addData("deviceName",sensorRange.getDeviceName() );
             //    telemetry.addData("range", String.format("%.01f cm", sensorRange.getDistance(DistanceUnit.CM)));
@@ -158,7 +214,7 @@ public class testv2 extends LinearOpMode {
             telemetry.update();
 
             //Senzor Culoare:
-            Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
+           /* Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
                     (int) (sensorColor.green() * SCALE_FACTOR),
                     (int) (sensorColor.blue() * SCALE_FACTOR),
                     hsvValues);
@@ -180,6 +236,8 @@ public class testv2 extends LinearOpMode {
                     relativeLayout.setBackgroundColor(Color.WHITE);
                 }
             });
+            */
+
             //telemetry.addData("Encoder value", Brat_M.getCurrentPosition());
             //telemetry.addData("velocity", Brat_M.getPower());
             //telemetry.addData("position", Brat_M.getCurrentPosition());
@@ -189,7 +247,8 @@ public class testv2 extends LinearOpMode {
 
             waitForStart();
 
-
+            pozitie_servo1 = Range.clip(pozitie_servo1, 0, 1);
+            pozitie_servo2 = Range.clip(pozitie_servo2, 0, 1);
             telemetry.addData(">>", "Press start to continue");
             telemetry.update();
 
