@@ -35,6 +35,7 @@ import android.view.View;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -43,6 +44,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.configuration.annotations.ServoType;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.robotcore.util.Range;
@@ -60,7 +62,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
     Codul pentru controlat robotul in TeleOp
  */
 @TeleOp(name="Basic: Linear OpMode", group="test")
-//@Disabled
+@Disabled
 public class testv2 extends LinearOpMode {
 
     static final double INCREMENT   = 0.01;
@@ -84,13 +86,9 @@ public class testv2 extends LinearOpMode {
     //Servo-uri:
     //private Servo Prindere=null;
 
-    Servo   Prindere;
-    double  position = (MAX_POS - MIN_POS) / 2;
-    boolean rampUp = true;
+    private CRServo Colectare = null;
+    int contor = 0;
 
-
-    double pozitie_servo1 = 0;
-    double pozitie_servo2 = 0;
     //Senzor distanta:
 
     //private DistanceSensor sensorRange;
@@ -126,7 +124,7 @@ public class testv2 extends LinearOpMode {
         Carusel= hardwareMap.get(DcMotor.class,"Carusel");
 
         //cod servo:
-        Prindere= hardwareMap.get(Servo.class,"Prindere");
+        Colectare = hardwareMap.get(CRServo.class,"Colectare");
         waitForStart();
 
 
@@ -149,7 +147,7 @@ public class testv2 extends LinearOpMode {
         telemetry.addData(">", "Press Start to begin" );
         telemetry.update();
         waitForStart();
-        waitForStart();
+
         runtime.reset();
 
         while (opModeIsActive()) {
@@ -165,34 +163,35 @@ public class testv2 extends LinearOpMode {
             Cutie.setPower(gamepad2.right_stick_y*0.2);
 
             //cod servo:
-                if (rampUp) {
-                    // Keep stepping up until we hit the max value.
-                    position += INCREMENT;
-                    if (position >= MAX_POS) {
-                        position = MAX_POS;
-                        rampUp = !rampUp;   // Switch ramp direction
-                    }
-                }
-                else
-                    {
-                    // Keep stepping down until we hit the min value.
-                    position -= INCREMENT;
-                    if (position <= MIN_POS) {
-                        position = MIN_POS;
-                        rampUp = !rampUp;  // Switch ramp direction
-                    }
-                }
             if(gamepad2.x) {
-            Prindere.setPosition(position);
-            sleep(CYCLE_MS);
-            idle();
+                Colectare.setPower(0);
+                contor = 1;
+            }
+            if(gamepad2.b) {
+                Colectare.setPower(1);
+                contor = 2;
+            }
+            if(gamepad2.y) {
+                Colectare.setPower(-1);
+                contor = 3;
             }
 
-            //cod motor masa:
+            //Afiseaza modul cutiei de prindere:
+
+            if(contor==1) {
+                telemetry.addData("Colectare","Stop");
+            }
+            if(contor==2) {
+                telemetry.addData("Colectare","ON Forward");
+            }
+            if(contor==3) {
+                telemetry.addData("Colectare","ON Reverse");
+            }
+            //cod motor masă:
 
             if(gamepad2.a)
                 Carusel.setPower(1);
-            if(gamepad2.b)
+            if(gamepad2.a)
                 Carusel.setPower(0);
 
             //Codare cu senzor culoare:
@@ -247,12 +246,9 @@ public class testv2 extends LinearOpMode {
 
             waitForStart();
 
-            pozitie_servo1 = Range.clip(pozitie_servo1, 0, 1);
-            pozitie_servo2 = Range.clip(pozitie_servo2, 0, 1);
+
             telemetry.addData(">>", "Press start to continue");
             telemetry.update();
-
-            telemetry.addData("Valoare", gamepad2.right_stick_x);
 
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
