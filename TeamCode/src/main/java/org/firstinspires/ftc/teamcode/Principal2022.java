@@ -63,7 +63,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  */
 @TeleOp(name="Basic: Linear OpMode", group="test")
 @Disabled
-public class testv2 extends LinearOpMode {
+public class Principal2022 extends LinearOpMode {
 
     static final double INCREMENT   = 0.01;
     static final int    CYCLE_MS    =   50;
