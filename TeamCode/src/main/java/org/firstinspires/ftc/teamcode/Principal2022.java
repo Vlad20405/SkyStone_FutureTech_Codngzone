@@ -62,7 +62,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
     Codul pentru controlat robotul in TeleOp
  */
 @TeleOp(name="Basic: Linear OpMode", group="test")
-@Disabled
+//@Disabled
 public class Principal2022 extends LinearOpMode {
 
     static final double INCREMENT   = 0.01;
@@ -84,7 +84,6 @@ public class Principal2022 extends LinearOpMode {
     private DcMotor Cutie=null;
     private DcMotor Carusel=null;
     //Servo-uri:
-    //private Servo Prindere=null;
 
     private CRServo Colectare = null;
     int contor = 0;
@@ -117,7 +116,7 @@ public class Principal2022 extends LinearOpMode {
         Dreapta_F.setDirection(DcMotor.Direction.REVERSE);
         Dreapta_S.setDirection(DcMotor.Direction.REVERSE);
 
-
+        Cutie.setDirection(DcMotor.Direction.REVERSE);
         //cod brat:
         Brat_M= hardwareMap.get(DcMotorImplEx.class, "Brat_M");
         Cutie= hardwareMap.get(DcMotor.class,"Cutie");
@@ -164,12 +163,12 @@ public class Principal2022 extends LinearOpMode {
 
             //cod servo:
             if(gamepad2.x) {
-                Colectare.setPower(0);
-                contor = 1;
-            }
-            if(gamepad2.b) {
                 Colectare.setPower(1);
                 contor = 2;
+            }
+            if(gamepad2.b) {
+                Colectare.setPower(0);
+                contor = 1;
             }
             if(gamepad2.y) {
                 Colectare.setPower(-1);
