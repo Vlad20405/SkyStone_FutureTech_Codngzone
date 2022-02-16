@@ -33,23 +33,16 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.view.View;
 
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.robotcore.internal.camera.delegating.DelegatingCaptureSequence;
-
-import java.util.Locale;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -82,7 +75,7 @@ import java.util.Locale;
 //@Disabled
 public class
 
-Autonom2022 extends LinearOpMode {
+Autonom2022_baterie_slaba extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -103,17 +96,30 @@ Autonom2022 extends LinearOpMode {
     private DcMotor Brat_M =null;
     private DcMotor Cutie=null;
     private DcMotor Carusel=null;
+
     //Servo-uri:
     private CRServo Colectare = null;
 
+    //Senzor distanta:
+    private DistanceSensor sensorRange;
+
     //Senzor culoare:
     ColorSensor senzorCuloare;
+
     @Override
     public void runOpMode() {
 
 
         telemetry.addData("Status", "Resetting Encoders");
         telemetry.update();
+        //Senzor distanta:
+
+          sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_range");
+        Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
+        telemetry.addData("range", String.format("%.01f cm", sensorRange.getDistance(DistanceUnit.CM)));
+        sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_range");
+        double distanta=sensorRange.getDistance(DistanceUnit.CM);
+
         //Senzor culoare:
 
         senzorCuloare = hardwareMap.get(ColorSensor.class, "senzorCuloare");
@@ -170,11 +176,11 @@ Autonom2022 extends LinearOpMode {
         Dreapta_F = hardwareMap.get(DcMotor.class, "Dreapta_F");
         Dreapta_S = hardwareMap.get(DcMotor.class, "Dreapta_S");
 
-        Brat_M = hardwareMap.get(DcMotor.class,"Brat_M");
-        Cutie= hardwareMap.get(DcMotor.class,"Cutie");
-        Carusel= hardwareMap.get(DcMotor.class,"Carusel");
+        Brat_M = hardwareMap.get(DcMotor.class, "Brat_M");
+        Cutie = hardwareMap.get(DcMotor.class, "Cutie");
+        Carusel = hardwareMap.get(DcMotor.class, "Carusel");
 
-        Colectare= hardwareMap.get(CRServo.class,"Colectare");
+        Colectare = hardwareMap.get(CRServo.class, "Colectare");
 
         Stanga_F.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Stanga_S.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -203,19 +209,19 @@ Autonom2022 extends LinearOpMode {
         Cutie.setDirection(DcMotor.Direction.REVERSE);
 
         telemetry.addData("Path0", "Starting at %7d :%7d");
-                Stanga_S.getCurrentPosition();
-                Stanga_F.getCurrentPosition();
-                Dreapta_F.getCurrentPosition();
-                Dreapta_S.getCurrentPosition();
+        Stanga_S.getCurrentPosition();
+        Stanga_F.getCurrentPosition();
+        Dreapta_F.getCurrentPosition();
+        Dreapta_S.getCurrentPosition();
         telemetry.update();
 
         //if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
         //    init();
-       // }
-       // else
+        // }
+        // else
         //    {
         //    telemetry.addData("Sorry!", "This device is not compatible with TFOD");
-       // }
+        // }
 
         /**
          * Activate TensorFlow Object Detection before we wait for the start command.
@@ -279,43 +285,41 @@ Autonom2022 extends LinearOpMode {
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         /**Inceput:**/
 
-        int i=1;
+        int i = 1;
 
-            straif(1, -6, 0, 0.80);
+        straif(1, -1, 0, 0.80);
+        Brat_M.setPower(1);
+        while (i != 60) {
+            straif(0, 0, 0, 0);
+            i++;
+        }
+        Brat_M.setPower(0);
+        i = 1;
+        encoderDrive(0.5, 2, -2, 0.85);
 
-            Brat_M.setPower(1);
-            while(i!=110){
-                straif(0,0,0,0);
-                i++;
+        while(distanta >=5)
+            {
+                straif(1, -1, 0, 3.15);
             }
-            Brat_M.setPower(0);
-            i=1;
 
-            encoderDrive(0.5, 8, -8, 0.5);
+        encoderDrive(0.5, 2, -2, 0.65);
 
-            straif(1, -15.5, 0,5);
+        straif(1, -1, 0, 0.50);
 
-            Colectare.setPower(1);
-            while(i!= 80) {
-                straif(0, 0, 0, 0);
-                i++;
-            }
-            i=1;
-            Colectare.setPower(0);
+        Carusel.setPower(1);
+        while (i != 150) {
+            straif(0, 0, 0, 0);
+            i++;
+        }
+        Carusel.setPower(0);
+        i = 1;
+        straif(1, 1, 0, 0.30);
 
-            Brat_M.setPower(-1);
-            while(i!=110){
-                straif(0,0,0,0);
-                i++;
-            }
-            Brat_M.setPower(0);
-            i=1;
-            straif(1, 10, 0,6);
+        encoderDrive(0.5, 2, -2, 0.85);
 
-            encoderDrive(0.5, 13, -13, 4);
+        straif(1, -1, 0, 5.5);
 
-
-            /*
+/*
             if(senzorCuloare.red()==0) {
                 straif(0, 0, 0, 0);
             }
@@ -340,11 +344,19 @@ Autonom2022 extends LinearOpMode {
             }
 
  */
-            i=1;
-             telemetry.addData("Path", "Complete");
-                telemetry.update();
+        i = 1;
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
 
-            }
+    }
+    public void setSensorRange(){
+        sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_range");
+        Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
+        telemetry.addData("range", String.format("%.01f cm", sensorRange.getDistance(DistanceUnit.CM)));
+
+    }
+
+
     public void setSenzorCuloare(){
         float hsvValues[] = {0F, 0F, 0F};
 
@@ -484,10 +496,10 @@ Autonom2022 extends LinearOpMode {
 
 
             runtime.reset();
-            Stanga_F.setPower(Math.abs(speed));
-            Stanga_S.setPower(Math.abs(speed));
-            Dreapta_F.setPower(Math.abs(speed));
-            Dreapta_S.setPower(Math.abs(speed));
+            Stanga_F.setPower(Math.abs(speed)*0.5);
+            Stanga_S.setPower(Math.abs(speed)*0.5);
+            Dreapta_F.setPower(Math.abs(speed)*0.5);
+            Dreapta_S.setPower(Math.abs(speed)*0.5);
 
 
             while (opModeIsActive() &&

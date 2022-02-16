@@ -29,32 +29,14 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import android.app.Activity;
-import android.graphics.Color;
-import android.view.View;
-
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.configuration.annotations.ServoType;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
-import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.hardware.NormalizedRGBA;
-import com.qualcomm.robotcore.hardware.SwitchableLight;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -63,7 +45,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  */
 @TeleOp(name="Basic: Linear OpMode", group="test")
 //@Disabled
-public class Principal2022 extends LinearOpMode {
+public class Principal2022_test_senzor_distanta extends LinearOpMode {
 
     static final double INCREMENT   = 0.01;
     static final int    CYCLE_MS    =   50;
@@ -89,8 +71,7 @@ public class Principal2022 extends LinearOpMode {
     int contor = 0;
 
     //Senzor distanta:
-
-    //private DistanceSensor sensorRange;
+    private DistanceSensor sensorRange;
 
     //Senzor culoare:
   //  private ColorSensor sensorColor;
@@ -100,8 +81,8 @@ public class Principal2022 extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         //Senzor Distanta Cod:
-        //  sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_range");
-        //Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
+          sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_range");
+          Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
 
         //cod sasiu:
 
@@ -116,7 +97,6 @@ public class Principal2022 extends LinearOpMode {
         Dreapta_F.setDirection(DcMotor.Direction.REVERSE);
         Dreapta_S.setDirection(DcMotor.Direction.REVERSE);
 
-        //Cutie.setDirection(DcMotor.Direction.REVERSE);
         //cod brat:
         Brat_M= hardwareMap.get(DcMotorImplEx.class, "Brat_M");
         Cutie= hardwareMap.get(DcMotor.class,"Cutie");
@@ -125,11 +105,6 @@ public class Principal2022 extends LinearOpMode {
         //cod servo:
         Colectare = hardwareMap.get(CRServo.class,"Colectare");
         waitForStart();
-
-
-        //Variabile Senzor Distanta:
-        //telemetry.addData(">>", "Press start to continue");
-        //telemetry.update();
 
         //Variabile senzor culoare:
   /*      sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color");
@@ -208,11 +183,11 @@ public class Principal2022 extends LinearOpMode {
               //      Dreapta_S.setPower(0);
                //     }
             //Cod_Senzor_Distanta:
-            //  telemetry.addData("deviceName",sensorRange.getDeviceName() );
-            //    telemetry.addData("range", String.format("%.01f cm", sensorRange.getDistance(DistanceUnit.CM)));
+              telemetry.addData("deviceName",sensorRange.getDeviceName() );
+              telemetry.addData("range", String.format("%.01f cm", sensorRange.getDistance(DistanceUnit.CM)));
 
-            //  telemetry.addData("ID", String.format("%x", sensorTimeOfFlight.getModelID()));
-            //  telemetry.addData("did time out", Boolean.toString(sensorTimeOfFlight.didTimeoutOccur()));
+              telemetry.addData("ID", String.format("%x", sensorTimeOfFlight.getModelID()));
+              telemetry.addData("did time out", Boolean.toString(sensorTimeOfFlight.didTimeoutOccur()));
 
             telemetry.update();
 
