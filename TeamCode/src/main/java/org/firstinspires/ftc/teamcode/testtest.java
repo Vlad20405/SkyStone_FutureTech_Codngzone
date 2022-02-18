@@ -39,6 +39,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /*
@@ -51,6 +52,12 @@ public class testtest extends LinearOpMode {
     // Declaram variabilele
     private ElapsedTime runtime = new ElapsedTime();
 
+    private DcMotor Dreapta_F = null;
+    private DcMotor Dreapta_S = null;
+    private DcMotor Stanga_F = null;
+    private DcMotor Stanga_S = null;
+
+
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -58,8 +65,22 @@ public class testtest extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        while (opModeIsActive()) {
+        Dreapta_F = hardwareMap.get(DcMotor.class,"Dreapta_F");
+        Dreapta_S = hardwareMap.get(DcMotor.class, "Dreapta_S");
+        Stanga_F = hardwareMap.get(DcMotor.class, "Stanga_F");
+        Stanga_S = hardwareMap.get(DcMotor.class, "Stanga_S");
 
+        Stanga_F.setDirection(DcMotor.Direction.FORWARD);
+        Stanga_S.setDirection(DcMotor.Direction.FORWARD);
+        Dreapta_F.setDirection(DcMotor.Direction.REVERSE);
+        Dreapta_S.setDirection(DcMotor.Direction.REVERSE);
+
+
+        while (opModeIsActive()) {
+            Stanga_F.setPower((gamepad1.left_stick_y + gamepad1.right_stick_x + gamepad1.left_stick_x));
+            Stanga_S.setPower((gamepad1.left_stick_y + gamepad1.right_stick_x - gamepad1.left_stick_x));
+            Dreapta_F.setPower((gamepad1.left_stick_y - gamepad1.right_stick_x + gamepad1.left_stick_x));
+            Dreapta_S.setPower((gamepad1.left_stick_y - gamepad1.right_stick_x - gamepad1.left_stick_x));
 
             telemetry.update();
 
@@ -72,8 +93,7 @@ public class testtest extends LinearOpMode {
 
             telemetry.addData("Valoare", gamepad2.right_stick_x);
 
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.update();
+                        telemetry.update();
 
 
         }
