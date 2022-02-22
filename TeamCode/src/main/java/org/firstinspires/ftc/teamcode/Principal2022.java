@@ -62,6 +62,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
     Codul pentru controlat robotul in TeleOp
  */
 @TeleOp(name="Basic: Linear OpMode", group="test")
+<<<<<<< Updated upstream:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Principal2022.java
 //@Disabled
 public class Principal2022 extends LinearOpMode {
 
@@ -69,6 +70,10 @@ public class Principal2022 extends LinearOpMode {
     static final int    CYCLE_MS    =   50;
     static final double MAX_POS     =  1.0;
     static final double MIN_POS     =  0.0;
+=======
+@Disabled
+public class testv2 extends LinearOpMode {
+>>>>>>> Stashed changes:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/testv2.java
 
     // Declaram variabilele
     private ElapsedTime runtime = new ElapsedTime();
@@ -105,7 +110,7 @@ public class Principal2022 extends LinearOpMode {
 
         //cod sasiu:
 
-        Dreapta_F = hardwareMap.get(DcMotor.class, "Dreapta_F");
+        Dreapta_F = hardwareMap.get(DcMotor.class,"Dreapta_F");
         Dreapta_S = hardwareMap.get(DcMotor.class, "Dreapta_S");
         Stanga_F = hardwareMap.get(DcMotor.class, "Stanga_F");
         Stanga_S = hardwareMap.get(DcMotor.class, "Stanga_S");

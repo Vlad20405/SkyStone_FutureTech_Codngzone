@@ -12,8 +12,13 @@ import org.firstinspires.ftc.robotcontroller.external.samples.SensorREV2mDistanc
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
+<<<<<<< Updated upstream:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Test.java
 //@Disabled
     public class Test extends LinearOpMode {
+=======
+@Disabled
+    public class Motoare extends LinearOpMode {
+>>>>>>> Stashed changes:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Motoare.java
 
     private ElapsedTime runtime = new ElapsedTime();
 
