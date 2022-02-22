@@ -76,7 +76,7 @@ import java.util.List;
  */
 
 @Autonomous(name="Pushbot: Auto By Encoder", group="Pushbot")
-//@Disabled
+@Disabled
 public class
 
 adsfasdfasdfas extends LinearOpMode {

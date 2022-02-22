@@ -34,6 +34,7 @@ import android.graphics.Color;
 import android.view.View;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -291,7 +292,7 @@ Autonom2022 extends LinearOpMode {
             Brat_M.setPower(0);
             i=1;
 
-            encoderDrive(0.5, 8, -8, 0.5);
+            encoderDrive(0.5, 8, -8, 0.45);
 
             straif(1, -15.5, 0,5);
 
@@ -310,9 +311,11 @@ Autonom2022 extends LinearOpMode {
             }
             Brat_M.setPower(0);
             i=1;
-            straif(1, 10, 0,6);
+            straifB(1, 10, 0,6);
 
-            encoderDrive(0.5, 13, -13, 4);
+            encoderDrive(0.5, -19, 19, 4);
+
+            straif(1, 65, 0,8);
 
 
             /*
@@ -440,6 +443,77 @@ Autonom2022 extends LinearOpMode {
                         Stanga_S.getCurrentPosition();
                         Dreapta_S.getCurrentPosition();
                         Dreapta_F.getCurrentPosition();
+                telemetry.update();
+            }
+
+            // Stop all motion;
+            Stanga_F.setPower(0);
+            Stanga_S.setPower(0);
+            Dreapta_S.setPower(0);
+            Dreapta_F.setPower(0);
+
+            Stanga_F.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            Stanga_S.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            Dreapta_F.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            Dreapta_S.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        }
+    }
+
+    public void straifB(double speed, double backwardMovement, double lat,double timeoutS) {
+        int newLeftTarget_f;
+        int newLeftTarget_s;
+        int newRightTarget_f;
+        int newRightTarget_s;
+
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newLeftTarget_f = Stanga_F.getCurrentPosition() + (int) (backwardMovement * COUNTS_PER_INCH);
+            newLeftTarget_s = Stanga_S.getCurrentPosition() + (int) (backwardMovement * COUNTS_PER_INCH);
+            newRightTarget_f = Dreapta_F.getCurrentPosition() + (int) (backwardMovement * COUNTS_PER_INCH);
+            newRightTarget_s = Dreapta_S.getCurrentPosition() + (int) (backwardMovement * COUNTS_PER_INCH);
+
+            int latLeftTarget_f = Stanga_F.getCurrentPosition() + (int) (lat * COUNTS_PER_INCH);
+            int latLeftTarget_s = Stanga_S.getCurrentPosition() + (int) (lat * COUNTS_PER_INCH);
+            int latRightTarget_f = Dreapta_F.getCurrentPosition() + (int) (lat * COUNTS_PER_INCH);
+            int latRightTarget_s = Dreapta_S.getCurrentPosition() + (int) (lat * COUNTS_PER_INCH);
+
+            Stanga_F.setDirection(DcMotor.Direction.REVERSE);
+            Stanga_S.setDirection(DcMotor.Direction.REVERSE);
+            Dreapta_F.setDirection(DcMotor.Direction.FORWARD);
+            Dreapta_S.setDirection(DcMotor.Direction.FORWARD);
+
+            Stanga_F.setTargetPosition(newLeftTarget_f - latLeftTarget_f);
+            Stanga_S.setTargetPosition(newLeftTarget_s + latLeftTarget_s);
+            Dreapta_F.setTargetPosition(newRightTarget_f - latRightTarget_f);
+            Dreapta_S.setTargetPosition(newRightTarget_s + latRightTarget_s);
+            // Turn On RUN_TO_POSITION
+            Stanga_F.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            Stanga_S.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            Dreapta_F.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            Dreapta_S.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+            runtime.reset();
+            Stanga_F.setPower(Math.abs(speed));
+            Stanga_S.setPower(Math.abs(speed));
+            Dreapta_F.setPower(Math.abs(speed));
+            Dreapta_S.setPower(Math.abs(speed));
+
+
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (Stanga_F.isBusy() && Stanga_S.isBusy() && Dreapta_F.isBusy() && Dreapta_S.isBusy())) {
+
+                telemetry.addData("Path1", "Running to %7d :%7d : %7d : %7d", newLeftTarget_f, newLeftTarget_s, newRightTarget_s, newRightTarget_f);
+                telemetry.addData("Path2", "Running at %7d :%7d : %7d : %7d");
+                Stanga_F.getCurrentPosition();
+                Stanga_S.getCurrentPosition();
+                Dreapta_S.getCurrentPosition();
+                Dreapta_F.getCurrentPosition();
                 telemetry.update();
             }
 
