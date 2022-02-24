@@ -47,9 +47,9 @@ import java.util.Locale;
 /*
     Codul pentru controlat robotul in TeleOp
  */
-@TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
+@TeleOp(name="Basic: Principal2020", group="Linear Opmode")
 @Disabled
-public class BasicOpMode_Linear extends LinearOpMode {
+public class BasicOpMode_Linear_2020 extends LinearOpMode {
 
         // Declaram variabilele
         private ElapsedTime runtime = new ElapsedTime();

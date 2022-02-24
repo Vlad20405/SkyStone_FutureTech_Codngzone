@@ -75,11 +75,11 @@ import java.util.List;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: Auto By Encoder", group="Pushbot")
+@Autonomous(name="Pushbot: Autonom2020", group="Pushbot")
 @Disabled
 public class
 
-adsfasdfasdfas extends LinearOpMode {
+Autonom2020 extends LinearOpMode {
 
     /* Declare OpMode members. */
 

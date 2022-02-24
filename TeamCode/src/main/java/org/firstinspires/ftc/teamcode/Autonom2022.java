@@ -79,7 +79,7 @@ import java.util.Locale;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: Autonom-baterie-full", group="Pushbot")
+@Autonomous(name="Pushbot: Autonom-2022", group="Pushbot")
 //@Disabled
 public class
 
