@@ -45,7 +45,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
     Codul pentru controlat robotul in TeleOp
  */
 @TeleOp(name="Basic: Linear OpMode", group="test")
-//@Disabled
+@Disabled
 public class Principal2022_test_senzor_distanta extends LinearOpMode {
 
     static final double INCREMENT   = 0.01;

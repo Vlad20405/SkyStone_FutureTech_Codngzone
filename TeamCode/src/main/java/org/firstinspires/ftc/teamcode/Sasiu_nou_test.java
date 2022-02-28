@@ -75,7 +75,7 @@ public class Sasiu_nou_test extends LinearOpMode {
         while (opModeIsActive()) {
 
             //cod brat:
-            Brat.setPower(gamepad2.left_stick_y*0.2);
+            Brat.setPower(gamepad2.left_stick_y);
             Cutie.setPower(gamepad2.right_stick_y*0.2);
 
             telemetry.update();

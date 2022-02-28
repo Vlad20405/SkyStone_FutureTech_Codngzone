@@ -33,6 +33,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.view.View;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -47,7 +48,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
     Codul pentru controlat robotul in TeleOp
  */
 @TeleOp(name="Basic: TestCuloare", group="test")
-//@Disabled
+@Disabled
 public class Teat_principal_senzorculoare extends LinearOpMode {
 
     static final double INCREMENT   = 0.01;

@@ -292,9 +292,9 @@ Autonom2022 extends LinearOpMode {
             Brat_M.setPower(0);
             i=1;
 
-            encoderDrive(0.5, 8, -8, 0.45);
+            encoderDrive(0.5, 8, -8, 0.55);
 
-            straif(1, -15.5, 0,5);
+            straif(1, -14.5, 0,4.5);
 
             Colectare.setPower(1);
             while(i!= 80) {
@@ -315,7 +315,7 @@ Autonom2022 extends LinearOpMode {
 
             encoderDrive(0.5, -19, 19, 4);
 
-            straif(1, 65, 0,8);
+            straif(1, 55, 0,7);
 
 
             /*

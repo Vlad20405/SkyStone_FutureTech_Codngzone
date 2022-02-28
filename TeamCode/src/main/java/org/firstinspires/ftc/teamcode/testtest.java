@@ -39,6 +39,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /*
@@ -51,15 +52,35 @@ public class testtest extends LinearOpMode {
     // Declaram variabilele
     private ElapsedTime runtime = new ElapsedTime();
 
+    private DcMotor stanga_f = null;
+    private DcMotor dreapta_f = null;
+    private DcMotor stanga_s = null;
+    private DcMotor dreapta_s = null;
+
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+
+        stanga_f= hardwareMap .get(DcMotor.class ,"stanga_f") ;
+        dreapta_f = hardwareMap.get(DcMotor.class, "dreapta_f");
+        stanga_s = hardwareMap.get(DcMotor.class, "stanga_s");
+        dreapta_s = hardwareMap.get(DcMotor.class, "dreapta_s");
+
+        stanga_f.setDirection(DcMotor.Direction.REVERSE);
+        stanga_s.setDirection(DcMotor.Direction.REVERSE);
+        dreapta_f.setDirection(DcMotor.Direction.FORWARD);
+        dreapta_s.setDirection(DcMotor.Direction.FORWARD);
+
         waitForStart();
         runtime.reset();
 
         while (opModeIsActive()) {
 
+            stanga_f.setPower(gamepad1.left_stick_y + gamepad1.right_stick_x + gamepad1.left_stick_x);
+            stanga_s.setPower(gamepad1.left_stick_y + gamepad1.right_stick_x - gamepad1.left_stick_x);
+            dreapta_f.setPower(gamepad1.left_stick_y - gamepad1.right_stick_x + gamepad1.left_stick_x);
+            dreapta_s.setPower(gamepad1.left_stick_y - gamepad1.right_stick_x - gamepad1.left_stick_x);
 
             telemetry.update();
 
