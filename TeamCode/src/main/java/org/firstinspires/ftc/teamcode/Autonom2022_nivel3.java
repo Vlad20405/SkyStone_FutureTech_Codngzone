@@ -79,11 +79,11 @@ import java.util.Locale;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: Autonom-2022", group="Pushbot")
+@Autonomous(name="Pushbot: Autonom-2022-nivel3", group="Pushbot")
 //@Disabled
 public class
 
-Autonom2022 extends LinearOpMode {
+Autonom2022_nivel3 extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -182,10 +182,14 @@ Autonom2022 extends LinearOpMode {
         Dreapta_F.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Dreapta_S.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        Brat_M.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         Stanga_F.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Stanga_S.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Dreapta_F.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Dreapta_S.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        Brat_M.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         Stanga_F.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         Stanga_S.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -206,6 +210,7 @@ Autonom2022 extends LinearOpMode {
         telemetry.addData("Path0", "Starting at %7d :%7d");
                 Stanga_S.getCurrentPosition();
                 Stanga_F.getCurrentPosition();
+
                 Dreapta_F.getCurrentPosition();
                 Dreapta_S.getCurrentPosition();
         telemetry.update();
@@ -285,7 +290,7 @@ Autonom2022 extends LinearOpMode {
             straif(1, -6, 0, 0.80);
 
             Brat_M.setPower(1);
-            while(i!=110){
+            while(i!=115){
                 straif(0,0,0,0);
                 i++;
             }
@@ -294,7 +299,7 @@ Autonom2022 extends LinearOpMode {
 
             encoderDrive(0.5, 8, -8, 0.55);
 
-            straif(1, -14.5, 0,4.5);
+            straif(1, -15, 0,4.5);
 
             Colectare.setPower(1);
             while(i!= 80) {
@@ -313,7 +318,7 @@ Autonom2022 extends LinearOpMode {
             i=1;
             straifB(1, 10, 0,6);
 
-            encoderDrive(0.5, -19, 19, 4);
+            encoderDrive(0.5, -18, 18, 4);
 
             straif(1, 55, 0,7);
 

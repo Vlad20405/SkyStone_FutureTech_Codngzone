@@ -157,10 +157,10 @@ public class Principal2022 extends LinearOpMode {
             Dreapta_F.setPower(gamepad1.left_stick_y);
             Dreapta_S.setPower(gamepad1.left_stick_y);
 
-            Stanga_F.setPower(gamepad1.right_stick_x);
-            Stanga_S.setPower(gamepad1.right_stick_x);
-            Dreapta_F.setPower(-gamepad1.right_stick_x);
-            Dreapta_S.setPower(-gamepad1.right_stick_x);
+            Stanga_F.setPower(-gamepad1.right_stick_x);
+            Stanga_S.setPower(-gamepad1.right_stick_x);
+            Dreapta_F.setPower(gamepad1.right_stick_x);
+            Dreapta_S.setPower(gamepad1.right_stick_x);
 
             //cod brat:
             Brat_M.setPower(gamepad2.left_stick_y);

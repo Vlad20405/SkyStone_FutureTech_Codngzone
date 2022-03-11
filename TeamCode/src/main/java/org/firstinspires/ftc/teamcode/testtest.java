@@ -45,8 +45,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 /*
     Codul pentru controlat robotul in TeleOp
  */
-@TeleOp(name="Basic: Linear OpMode", group="test")
-@Disabled
+@TeleOp(name="Sasiu_secundar", group="test")
+//@Disabled
 public class testtest extends LinearOpMode {
 
     // Declaram variabilele
@@ -68,9 +68,9 @@ public class testtest extends LinearOpMode {
         dreapta_s = hardwareMap.get(DcMotor.class, "dreapta_s");
 
         stanga_f.setDirection(DcMotor.Direction.REVERSE);
-        stanga_s.setDirection(DcMotor.Direction.REVERSE);
+        stanga_s.setDirection(DcMotor.Direction.FORWARD);
         dreapta_f.setDirection(DcMotor.Direction.FORWARD);
-        dreapta_s.setDirection(DcMotor.Direction.FORWARD);
+        dreapta_s.setDirection(DcMotor.Direction.REVERSE);
 
         waitForStart();
         runtime.reset();
@@ -78,8 +78,8 @@ public class testtest extends LinearOpMode {
         while (opModeIsActive()) {
 
             stanga_f.setPower(gamepad1.left_stick_y + gamepad1.right_stick_x + gamepad1.left_stick_x);
-            stanga_s.setPower(gamepad1.left_stick_y + gamepad1.right_stick_x - gamepad1.left_stick_x);
-            dreapta_f.setPower(gamepad1.left_stick_y - gamepad1.right_stick_x + gamepad1.left_stick_x);
+            dreapta_f.setPower(gamepad1.left_stick_y + gamepad1.right_stick_x - gamepad1.left_stick_x);
+            stanga_s.setPower(gamepad1.left_stick_y - gamepad1.right_stick_x + gamepad1.left_stick_x);
             dreapta_s.setPower(gamepad1.left_stick_y - gamepad1.right_stick_x - gamepad1.left_stick_x);
 
             telemetry.update();

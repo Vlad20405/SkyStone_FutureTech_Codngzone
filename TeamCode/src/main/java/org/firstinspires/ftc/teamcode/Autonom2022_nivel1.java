@@ -33,17 +33,12 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.view.View;
 
-import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -72,11 +67,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: Autonom-baterie-full", group="Pushbot")
-@Disabled
+@Autonomous(name="Pushbot: Autonom-2022-nivel1", group="Pushbot")
+//@Disabled
 public class
 
-Autonom2022_baterie_slaba extends LinearOpMode {
+Autonom2022_nivel1 extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -97,30 +92,17 @@ Autonom2022_baterie_slaba extends LinearOpMode {
     private DcMotor Brat_M =null;
     private DcMotor Cutie=null;
     private DcMotor Carusel=null;
-
     //Servo-uri:
     private CRServo Colectare = null;
 
-    //Senzor distanta:
-    private DistanceSensor sensorRange;
-
     //Senzor culoare:
     ColorSensor senzorCuloare;
-
     @Override
     public void runOpMode() {
 
 
         telemetry.addData("Status", "Resetting Encoders");
         telemetry.update();
-        //Senzor distanta:
-
-          sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_range");
-        Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
-        telemetry.addData("range", String.format("%.01f cm", sensorRange.getDistance(DistanceUnit.CM)));
-        sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_range");
-        double distanta=sensorRange.getDistance(DistanceUnit.CM);
-
         //Senzor culoare:
 
         senzorCuloare = hardwareMap.get(ColorSensor.class, "senzorCuloare");
@@ -177,11 +159,11 @@ Autonom2022_baterie_slaba extends LinearOpMode {
         Dreapta_F = hardwareMap.get(DcMotor.class, "Dreapta_F");
         Dreapta_S = hardwareMap.get(DcMotor.class, "Dreapta_S");
 
-        Brat_M = hardwareMap.get(DcMotor.class, "Brat_M");
-        Cutie = hardwareMap.get(DcMotor.class, "Cutie");
-        Carusel = hardwareMap.get(DcMotor.class, "Carusel");
+        Brat_M = hardwareMap.get(DcMotor.class,"Brat_M");
+        Cutie= hardwareMap.get(DcMotor.class,"Cutie");
+        Carusel= hardwareMap.get(DcMotor.class,"Carusel");
 
-        Colectare = hardwareMap.get(CRServo.class, "Colectare");
+        Colectare= hardwareMap.get(CRServo.class,"Colectare");
 
         Stanga_F.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Stanga_S.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -210,19 +192,19 @@ Autonom2022_baterie_slaba extends LinearOpMode {
         Cutie.setDirection(DcMotor.Direction.REVERSE);
 
         telemetry.addData("Path0", "Starting at %7d :%7d");
-        Stanga_S.getCurrentPosition();
-        Stanga_F.getCurrentPosition();
-        Dreapta_F.getCurrentPosition();
-        Dreapta_S.getCurrentPosition();
+                Stanga_S.getCurrentPosition();
+                Stanga_F.getCurrentPosition();
+                Dreapta_F.getCurrentPosition();
+                Dreapta_S.getCurrentPosition();
         telemetry.update();
 
         //if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
         //    init();
-        // }
-        // else
+       // }
+       // else
         //    {
         //    telemetry.addData("Sorry!", "This device is not compatible with TFOD");
-        // }
+       // }
 
         /**
          * Activate TensorFlow Object Detection before we wait for the start command.
@@ -286,41 +268,45 @@ Autonom2022_baterie_slaba extends LinearOpMode {
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         /**Inceput:**/
 
-        int i = 1;
+        int i=1;
 
-        straif(1, -1, 0, 0.80);
-        Brat_M.setPower(1);
-        while (i != 60) {
-            straif(0, 0, 0, 0);
-            i++;
-        }
-        Brat_M.setPower(0);
-        i = 1;
-        encoderDrive(0.5, 2, -2, 0.85);
+            straif(1, -6, 0, 0.80);
 
-        while(distanta >=5)
-            {
-                straif(1, -1, 0, 3.15);
+            Brat_M.setPower(1);
+            while(i!=105){
+                straif(0,0,0,0);
+                i++;
             }
+            Brat_M.setPower(0);
+            i=1;
 
-        encoderDrive(0.5, 2, -2, 0.65);
+            encoderDrive(0.5, 8, -8, 0.55);
 
-        straif(1, -1, 0, 0.50);
+            straif(1, -13, 0,4);
 
-        Carusel.setPower(1);
-        while (i != 150) {
-            straif(0, 0, 0, 0);
-            i++;
-        }
-        Carusel.setPower(0);
-        i = 1;
-        straif(1, 1, 0, 0.30);
+            Colectare.setPower(1);
+            while(i!= 80) {
+                straif(0, 0, 0, 0);
+                i++;
+            }
+            i=1;
+            Colectare.setPower(0);
 
-        encoderDrive(0.5, 2, -2, 0.85);
+            Brat_M.setPower(-1);
+            while(i!=110){
+                straif(0,0,0,0);
+                i++;
+            }
+            Brat_M.setPower(0);
+            i=1;
+            straifB(1, 10, 0,6);
 
-        straif(1, -1, 0, 5.5);
+            encoderDrive(0.5, -19, 19, 4);
 
-/*
+            straif(1, 55, 0,7);
+
+
+            /*
             if(senzorCuloare.red()==0) {
                 straif(0, 0, 0, 0);
             }
@@ -345,19 +331,11 @@ Autonom2022_baterie_slaba extends LinearOpMode {
             }
 
  */
-        i = 1;
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
+            i=1;
+             telemetry.addData("Path", "Complete");
+                telemetry.update();
 
-    }
-    public void setSensorRange(){
-        sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_range");
-        Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
-        telemetry.addData("range", String.format("%.01f cm", sensorRange.getDistance(DistanceUnit.CM)));
-
-    }
-
-
+            }
     public void setSenzorCuloare(){
         float hsvValues[] = {0F, 0F, 0F};
 
@@ -470,6 +448,77 @@ Autonom2022_baterie_slaba extends LinearOpMode {
         }
     }
 
+    public void straifB(double speed, double backwardMovement, double lat,double timeoutS) {
+        int newLeftTarget_f;
+        int newLeftTarget_s;
+        int newRightTarget_f;
+        int newRightTarget_s;
+
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newLeftTarget_f = Stanga_F.getCurrentPosition() + (int) (backwardMovement * COUNTS_PER_INCH);
+            newLeftTarget_s = Stanga_S.getCurrentPosition() + (int) (backwardMovement * COUNTS_PER_INCH);
+            newRightTarget_f = Dreapta_F.getCurrentPosition() + (int) (backwardMovement * COUNTS_PER_INCH);
+            newRightTarget_s = Dreapta_S.getCurrentPosition() + (int) (backwardMovement * COUNTS_PER_INCH);
+
+            int latLeftTarget_f = Stanga_F.getCurrentPosition() + (int) (lat * COUNTS_PER_INCH);
+            int latLeftTarget_s = Stanga_S.getCurrentPosition() + (int) (lat * COUNTS_PER_INCH);
+            int latRightTarget_f = Dreapta_F.getCurrentPosition() + (int) (lat * COUNTS_PER_INCH);
+            int latRightTarget_s = Dreapta_S.getCurrentPosition() + (int) (lat * COUNTS_PER_INCH);
+
+            Stanga_F.setDirection(DcMotor.Direction.REVERSE);
+            Stanga_S.setDirection(DcMotor.Direction.REVERSE);
+            Dreapta_F.setDirection(DcMotor.Direction.FORWARD);
+            Dreapta_S.setDirection(DcMotor.Direction.FORWARD);
+
+            Stanga_F.setTargetPosition(newLeftTarget_f - latLeftTarget_f);
+            Stanga_S.setTargetPosition(newLeftTarget_s + latLeftTarget_s);
+            Dreapta_F.setTargetPosition(newRightTarget_f - latRightTarget_f);
+            Dreapta_S.setTargetPosition(newRightTarget_s + latRightTarget_s);
+            // Turn On RUN_TO_POSITION
+            Stanga_F.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            Stanga_S.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            Dreapta_F.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            Dreapta_S.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+            runtime.reset();
+            Stanga_F.setPower(Math.abs(speed));
+            Stanga_S.setPower(Math.abs(speed));
+            Dreapta_F.setPower(Math.abs(speed));
+            Dreapta_S.setPower(Math.abs(speed));
+
+
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (Stanga_F.isBusy() && Stanga_S.isBusy() && Dreapta_F.isBusy() && Dreapta_S.isBusy())) {
+
+                telemetry.addData("Path1", "Running to %7d :%7d : %7d : %7d", newLeftTarget_f, newLeftTarget_s, newRightTarget_s, newRightTarget_f);
+                telemetry.addData("Path2", "Running at %7d :%7d : %7d : %7d");
+                Stanga_F.getCurrentPosition();
+                Stanga_S.getCurrentPosition();
+                Dreapta_S.getCurrentPosition();
+                Dreapta_F.getCurrentPosition();
+                telemetry.update();
+            }
+
+            // Stop all motion;
+            Stanga_F.setPower(0);
+            Stanga_S.setPower(0);
+            Dreapta_S.setPower(0);
+            Dreapta_F.setPower(0);
+
+            Stanga_F.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            Stanga_S.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            Dreapta_F.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            Dreapta_S.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        }
+    }
+
     public void encoderDrive(double speed, double leftInches, double rightInches, double timeoutS) {
         int newLeftTarget_f;
         int newLeftTarget_s;
@@ -497,10 +546,10 @@ Autonom2022_baterie_slaba extends LinearOpMode {
 
 
             runtime.reset();
-            Stanga_F.setPower(Math.abs(speed)*0.5);
-            Stanga_S.setPower(Math.abs(speed)*0.5);
-            Dreapta_F.setPower(Math.abs(speed)*0.5);
-            Dreapta_S.setPower(Math.abs(speed)*0.5);
+            Stanga_F.setPower(Math.abs(speed));
+            Stanga_S.setPower(Math.abs(speed));
+            Dreapta_F.setPower(Math.abs(speed));
+            Dreapta_S.setPower(Math.abs(speed));
 
 
             while (opModeIsActive() &&
