@@ -297,9 +297,9 @@ Autonom2022_nivel3 extends LinearOpMode {
             Brat_M.setPower(0);
             i=1;
 
-            encoderDrive(0.5, 8, -8, 0.55);
+            encoderDrive(0.5, 7.5, -7.5, 0.53);
 
-            straif(1, -15, 0,4.5);
+            straif(1, -16, 0,4.75);
 
             Colectare.setPower(1);
             while(i!= 80) {
@@ -318,11 +318,18 @@ Autonom2022_nivel3 extends LinearOpMode {
             i=1;
             straifB(1, 10, 0,6);
 
-            encoderDrive(0.5, -18, 18, 4);
+            encoderDrive(0.5, -16.5, 16.5, 3.75);
 
-            straif(1, 55, 0,7);
+            straif(1, 49, 0,6.70);
 
-
+            Brat_M.setPower(1);
+            while(i!=135){
+                straif(0,0,0,0);
+                i++;
+            }
+            i=1;
+            Brat_M.setPower(0);
+            
             /*
             if(senzorCuloare.red()==0) {
                 straif(0, 0, 0, 0);
